@@ -1,0 +1,82 @@
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+
+
+    Directory: C:\Users\$ourav\Desktop\vs
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         11/2/2021   6:14 PM                assignment
+
+
+PS C:\Users\$ourav\Desktop\vs> cd .\assignment\
+PS C:\Users\$ourav\Desktop\vs\assignment> mkdir source
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         11/2/2021   6:14 PM                source
+
+
+PS C:\Users\$ourav\Desktop\vs\assignment> mkdir destination
+
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         11/2/2021   6:15 PM                destination
+
+
+PS C:\Users\$ourav\Desktop\vs\assignment> cp .\source\file.txt destination
+PS C:\Users\$ourav\Desktop\vs\assignment\source> rm -r
+
+cmdlet Remove-Item at command pipeline position 1
+Supply values for the following parameters:
+Path[0]:
+Remove-Item : Cannot bind argument to parameter 'Path' because it is an empty array.
+At line:1 char:1
++ rm -r
++ ~~~~~
+    + CategoryInfo          : InvalidData: (:) [Remove-Item], ParameterBindingValidationException
+    + FullyQualifiedErrorId : ParameterArgumentValidationErrorEmptyArrayNotAllowed,Microsoft.PowerShell.Commands.RemoveItemCo  
+   mmand
+ 
+PS C:\Users\$ourav\Desktop\vs\assignment\source> cd ..
+PS C:\Users\$ourav\Desktop\vs\assignment> rm -r .\source\     
+PS C:\Users\$ourav\Desktop\vs\assignment> mkdir source
+
+
+    Directory: C:\Users\$ourav\Desktop\vs\assignment
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         11/2/2021   6:19 PM                source
+
+
+PS C:\Users\$ourav\Desktop\vs\assignment> cd .\source\     
+PS C:\Users\$ourav\Desktop\vs\assignment\source> cat file1.txt
+cat : Cannot find path 'C:\Users\$ourav\Desktop\vs\assignment\source\file1.txt' because it does not exist.
+At line:1 char:1
++ cat file1.txt
++ ~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\$ourav...ource\file1.txt:String) [Get-Content], ItemNotFoundException  
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+PS C:\Users\$ourav\Desktop\vs\assignment\source> history
+
+  Id CommandLine
+  -- -----------
+   1 mkdir assignment
+   2 cd .\assignment\
+   3 mkdir source
+   4 mkdir destination
+   5 cp .\source\file.txt destination
+   6 cd .\source\
+   7 rm -r
+   8 cd ..
+   9 rm -r .\source\
+  10 mkdir source
+  11 cd .\source\
+  12 cat file1.txt
