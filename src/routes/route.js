@@ -1,61 +1,87 @@
 const express = require('express');
-
 const router = express.Router();
 
-router.get('/test-me', function (req, res) {
-    res.send('My first ever api!')
-});
-
-router.get('/movies', function (req, res) {
-    res.send(['No Time To Die','Dune','The Suicide Squad','Shang-Chi And The Legend Of The Ten Rings'])
-});
-
-router.get('/movies/:movieIndex', function (req, res) {
-   
-    let movies =['No Time To Die','Dune','The Suicide Squad','Shang-Chi And The Legend Of The Ten Rings']
-    let index = req.params.movieIndex
-    let movieAtIndex= movies[index]
-
-    //res.send([movieAtIndex])
-
-    //value>movies.length?res.send("Enter valid Index"):res.send(movies[value])
-if (index> movies.length-1){
-    res.send("Invalid Input")
-}else{
-    res.send(movies[index])
-}
-    
-});
+// router.get('/test-me', function (req, res) {
+//     res.send('My first ever api!')
+// });
 
 
-router.get('/films', function (req, res) {
-   
-    let movies =[{"id":1,"name":'No Time To Die'},{"id":2,"name":'Dune'},{"id":3,"name":'The Suicide Squad'},{"id":4,"name":'Shang-Chi And The Legend Of The Ten Rings'}]
-    res.send(movies)   
-});
+//1. class practise
 
-router.get('/films/:filmsid', function (req, res) {
-   
-    let movies =[{"id":1,"name":'No Time To Die'},{"id":2,"name":'Dune'},{"id":3,"name":'The Suicide Squad'},{"id":4,"name":'Shang-Chi And The Legend Of The Ten Rings'}]
-     
+const UserModel = require("../models/userModel")
+const UserController = require("../controllers/userController")
 
-const result = movies.filter(x=>{
-    return x.id == req.params.filmsid
-})
-    console.log(result);
-    res.send(result)
+const BookModel = require("../models/bookModel")
+const BookController = require("../controllers/bookController")
 
 
-// let movies = movies.length
-// let req = req.params.filmsid
-// let value = req <= movies ? movies[req-1] : 'there is no movie with this ID'
-// res.send(movies)
+router.post('/createUser', UserController.createUser);
 
-});
+router.get('/getAllUsers', UserController.getUsersData);
+
+
+// api to create a new book 
+
+router.post('/createBooks', UserController.createBooks);
+
+//and another api to get the list of all books. 
+
+router.get('/getAllBooks', UserController.getBooksData);
 
 
 
+
+
+//MongoDb first Assignment 1
+
+
+//createBook : to create a new entry..use this api to create 11+ entries in your collection
+router.post('/createBook', BookController.createBook);
+
+//bookList : gives all the books- their bookName and authorName only
+router.get('/bookList', BookController.getBooksData);
+
+//getBooksInYear: takes year as input in post request and gives list of all books published that year
+router.post('/getBooksInYear', BookController.getBooksInYear);
+
+//getParticularBooks:- (this is a good one, make sincere effort to solve this) take any input and use it as a condition to fetch books that satisfy that condition 	
+// e.g if body had { name: “hi”} then you would fetch the books with this name
+// if body had { year: 2020} then you would fetch the books with this name
+// hence the condition will differ based on what you input in the request body
+
+router.post('/getParticularBooks', BookController.getParticularBooks);
+
+
+//getXINRBooks- request to return all books who have an Indian price tag of “100INR” or “200INR” or “500INR”
+router.post('/getXINRBooks', BookController.getXINRBooks);
+
+//getRandomBooks - returns books that are available in stock or have more than 500 pages
+router.post('/getRandomBooks', BookController.getRandomBooks);
+
+
+
+
+//Assignment 2
+
+//Write create APIs for both books and authors
+const newBookModel = require("../models/newbookModel")
+const authorModel = require("../models/authorModel")
+const authorController = require("../controllers/authorController")
+const newbookController = require("../controllers/newbookController")
+
+
+
+router.post('/createnewBook', newbookController.createnewBook);
+
+router.post('/createAuthor', authorController.createAuthor);
+
+router.get('/ChetanBhagat', newbookController.ChetanBhagat);
+
+router.get('/priceUpdate', newbookController.priceUpdate);
+
+router.get('/findByName', newbookController.findByName);
 
 
 
 module.exports = router;
+
