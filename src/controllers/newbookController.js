@@ -9,15 +9,26 @@ const createnewBook = async function (req, res) {
 }
 
 //List out the books written by Chetan Bhagat
+
 const ChetanBhagat = async function (req, res) {
-    let savedData = await newbookModel.find({ author_id:1})
-    // let savedData = await authorModel.find({ author_id:1})
-    res.send({ msg: savedData })
+    let savedData = await newbookModel.findOne({ author_name:"Chetan Bhagat"})
+    let x= savedData.author_id
+    let y= await newbookModel.find({author_id: x}).select({name:1 ,_id:0})
+    res.send({ msg: y })
 }
+
+
+// const ChetanBhagat = async function (req, res) {
+//     let savedData = await newbookModel.find({ author_id:1})  
+//     res.send({ msg: savedData })
+// }
+
+
+
 
 //find the author of “Two states” and update the book price to 100;  Send back the author_name and updated price in response
 const priceUpdate = async function (req, res) {
-    let priceUpdateBook = await newbookModel.findOneAndUpdate({ name: "Two states" }, { "price": 100 })
+    let priceUpdateBook = await authorModel.findOneAndUpdate({ name: "Two states" }, { "price": 100 })
     res.send({ msg: priceUpdateBook })
 }
 
