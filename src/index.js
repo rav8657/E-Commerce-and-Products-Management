@@ -3,10 +3,24 @@ var bodyParser = require('body-parser');
 
 const route = require('./routes/route.js');
 
+const moment = require('moment');
+
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+
+const midGlb= function (req, res, next) {
+    let date=moment().format();
+    let ip=req.ip;
+    let api=req.originalUrl;
+    console.log(date+"|"+ip+"|"+api);
+
+    //logic
+    next()    
+}
+app.use(midGlb)
 
 const mongoose = require('mongoose')
 
