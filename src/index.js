@@ -10,14 +10,15 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// 19 NOV assignment - write a api and insert a middlewares and log the data everytime when any API is hit . (give date-time-Ip address-url which you hit.)
 
 const midGlb= function (req, res, next) {
     let date=moment().format();
     let ip=req.ip;
     let api=req.originalUrl;
-    console.log(date+"|"+ip+"|"+api);
-
+    console.log(date+" | "+ip+" | "+api);
     //logic
+    
     next()    
 }
 app.use(midGlb)
@@ -25,7 +26,7 @@ app.use(midGlb)
 const mongoose = require('mongoose')
 
 mongoose.connect("mongodb+srv://user-open-to-all:hiPassword123@cluster0.xgk0k.mongodb.net/souravDB-database?retryWrites=true&w=majority", { useNewUrlParser: true })
-    .then(() => console.log('mongodb running on 27017'))
+    .then(() => console.log('mongodb running perfectly on 27017'))
     .catch(err => console.log(err))
 
 app.use('/', route);
