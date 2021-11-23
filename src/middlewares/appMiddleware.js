@@ -1,19 +1,21 @@
-//4. Update the logic in middleware to set the isFreeAppUser attribute in req. Use this attribute in the route handler for populating the isFreeAppUser attributes of User and Order collection.
+const jwt = require("jsonwebtoken");
 
-let validateAppType = function (req, res, next) {
-    let appType = req.headers["isfreeapp"]
-    //console.log(req.headers)
-    if(!appType) {
-        res.send({message: 'Missing mandatory header'})
-    } else {
-        if(appType === 'true') {
-            appType = true
-        } else {
-            appType = false
+const checkAuthentication= function (req, res, next) {
+    let token=req.headers["x-auth-token"]
+    if(token!= null){
+        let decodedToken=jwt.verify(token,"radium")
+        if(decodedToken){
+                next()
+        }else{
+            res.send({msg:"token is not verified"})
         }
-        req.isFreeAppUser = appType
-        next()
-    }
+    }else{
+        res.send({msg:"request is missing a mandatory token header"})
+    } 
+
 }
 
-module.exports.validateAppType = validateAppType
+
+
+
+module.exports.checkAuthentication= checkAuthentication

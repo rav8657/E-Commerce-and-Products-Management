@@ -1,26 +1,67 @@
+const userModel = require("../models/userModel.js");
+const jwt = require("jsonwebtoken");
 
-//2.  Write a POST api to create a user that takes user details from the request body. If the header isFreeApp is not present terminate the request response cycle with an error message that the request is missing a mandatory header
 
 
-const userModel = require("../models/userModel");
-
+//PROBLEM 1-REGISTER USER
 const createUser = async function (req, res) {
-  let userDetails = req.body;
-  userDetails.freeAppUser = req.isFreeAppUser;
-  let userCreated = await userModel.create(userDetails);
-  res.send({ data: userCreated });
+  let data= req.body
+  let savedData= await userModel.create(data)
+  res.send({msg: savedData}) 
 };
-  module.exports.createUser = createUser;
+
+//PROBLEM 2-LOGIN USER
+const login = async function (req, res) {
+  let userName= req.body.name
+  let password= req.body.password
+
+  let credentials=await userModel.findOne({name:userName,password:password,isDeleted:false})
+
+  if(credentials){
+          let payload={_id:credentials._id}
+          let token=jwt.sign(payload,"radium")
+          res.send({status:true,data:credentials._id,token:token})
+  }else{
+    res.send({msg:"user name not found"})
+  }
+};
+
+//PROBLEM 3-GET USER DETAILS (PROTECTED API)
+
+const users = async function (req, res) {
+  let userId= req.params.userId
+  let userDetails= await userModel.findOne({_id:userId,isDeleted:false})
+  if(userDetails){
+    res.send({status:true,msg: userDetails}) 
+  }else{
+    res.send({status:false,msg:"userId not Valid"})
+  } 
+};
+
+//PROBLEM 4-UPDATE EMAIL (PROTECTED API) 
+
+const updateUser = async function (req, res) {
+  let userId= req.params.userId
+  let email=req.body.email
+  let userDetails= await userModel.findOneAndUpdate({_id:userId},{email:email},{new:true})
+  if(userDetails){
+    res.send({status:true,msg: userDetails}) 
+  }else{
+    res.send({status:false,msg:"userId not Valid"})
+  } 
+};
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+const getUser = async function (req, res) {
+  let allUser = await userModel.find();
+  res.send({ msg: allUser });
+};
+module.exports.createUser = createUser;
+module.exports.login = login;
+module.exports.users = users;
+module.exports.updateUser = updateUser;
 
-
-
-// const createUsers = async function (req, res) {
-//     const users = req.body
-//     let savedUser = await UserModel.create(users)
-//     res.send({ data: savedUser })
-// }
-// module.exports.createUsers = createUsers;
+module.exports.getUser = getUser;

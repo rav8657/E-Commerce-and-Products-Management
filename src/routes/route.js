@@ -2,19 +2,17 @@ const express = require("express");
 const router = express.Router();
 const appMiddleware = require("../middlewares/appMiddleware");
 const userController = require("../controllers/userController");
-const productController = require("../controllers/productController");
-const orderController = require("../controllers/orderController");
+
 router.get('/test-me', function (req, res) {
     res.send('My first ever api!')
 });
 
-//user API
-router.post("/users", appMiddleware.validateAppType, userController.createUser);
 
-//product API
-router.post("/products", productController.createProduct);
+router.post('/createUser', userController.createUser);
+router.post('/login', userController.login);
+router.get('/users/:userId', appMiddleware.checkAuthentication, userController.users);
+router.put('/updateUser/:userId', appMiddleware.checkAuthentication, userController.updateUser);
 
-//order API
-router.post("/orders",appMiddleware.validateAppType,orderController.createOrder);
-
+//GET ALLUSER DETAILS
+router.get('/getUser', userController.getUser);
 module.exports = router;
