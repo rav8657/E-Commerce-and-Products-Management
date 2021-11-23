@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 const createUser = async function (req, res) {
   let data= req.body
   let savedData= await userModel.create(data)
-  res.send({msg: savedData}) 
+  res.send({data: savedData}) 
 };
 
 //PROBLEM 2-LOGIN USER
@@ -15,11 +15,11 @@ const login = async function (req, res) {
   let userName= req.body.name
   let password= req.body.password
 
-  let credentials=await userModel.findOne({name:userName,password:password,isDeleted:false})
+  let credentials = await userModel.findOne({name:userName,password:password,isDeleted:false})
 
   if(credentials){
           let payload={_id:credentials._id}
-          let token=jwt.sign(payload,"radium")
+          let token = jwt.sign(payload,"radium")
           res.send({status:true,data:credentials._id,token:token})
   }else{
     res.send({msg:"user name not found"})

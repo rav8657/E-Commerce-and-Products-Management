@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-const checkAuthentication= function (req, res, next) {
+const checkAuthentication = function (req, res, next) {
     let token=req.headers["x-auth-token"]
     if(token!= null){
         let decodedToken=jwt.verify(token,"radium")
@@ -10,12 +10,9 @@ const checkAuthentication= function (req, res, next) {
             res.send({msg:"token is not verified"})
         }
     }else{
-        res.send({msg:"request is missing a mandatory token header"})
+        res.send({msg:"request is missing token header is mandatory"})
     } 
 
 }
-
-
-
 
 module.exports.checkAuthentication= checkAuthentication
