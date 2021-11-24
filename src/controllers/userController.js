@@ -1,73 +1,55 @@
 const userModel = require("../models/userModel.js");
 const jwt = require("jsonwebtoken");
 
-////////////////////////////////////////////////////////////////////////////////////////////
-//PROBLEM 1-REGISTER USER
-///////////////////////////////////////////////////////////////////////////////////////////
-
-const createUser = async function (req, res) {
-  let data = req.body
-  let savedData = await userModel.create(data)
-  res.send({ data: savedData })
-};
-
-module.exports.createUser = createUser;
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-//PROBLEM 2-LOGIN USER
-//////////////////////////////////////////////////////////////////////////////////////////////
-
-const login = async function (req, res) {
-  let userName = req.body.name
-  let password = req.body.password
-
-  let credentials = await userModel.findOne({ name: userName, password: password, isDeleted: false }, { createdAt: 0, updatedAt: 0 })
-
-  if (credentials) {
-    let payload = { _id: credentials._id }
-    let token = jwt.sign(payload, "radium")
-    res.header('x-auth-token', token)
-    res.send({ status: true })
-  } else {
-    res.send({ msg: "user name not found" })
-  }
-};
-
-module.exports.login = login;
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
-//PROBLEM 3-GET USER DETAILS (PROTECTED API)
+//PROBLEM 1-GET USER DETAILS (PROTECTED API)   24//11//2021
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+
 const users = async function (req, res) {
-  let userId = req.params.userId
-  let userDetails = await userModel.findOne({ _id: userId, isDeleted: false })
-  if (userDetails) {
-    res.send({ status: true, msg: userDetails })
-  } else {
-    res.send({ status: false, msg: "userId not Valid" })
+  try {
+    if (req.validToken._id === req.params.userId) {
+      let userId = req.params.userId
+      let userDetails = await userModel.findOne({ _id: userId, isDeleted: false })
+      if (userDetails) {
+        res.status(200).send({ status: true, msg: userDetails })
+      } else {
+        res.status(404).send({ status: false, msg: "Invalid UsedId" })
+      }
+    } else { res.status(404).send({ status: false, msg: "Not Authorized" }) }
+    console.log(req.token.userId)
+  }
+
+  catch (error) {
+    res.status(500).send({ status: false, msg: "This is catch" })
+
   }
 };
+
 
 module.exports.users = users;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-//PROBLEM 4-UPDATE EMAIL (PROTECTED API) 
+//PROBLEM 2-UPDATE EMAIL (PROTECTED API) 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const updateUser = async function (req, res) {
-  let userId = req.params.userId
-  let email = req.body.email
-  let userDetails = await userModel.findOneAndUpdate({ _id: userId }, { email: email }, { new: true })
-  if (userDetails) {
-    res.send({ status: true, msg: userDetails })
-  } else {
-    res.send({ status: false, msg: "userId not Valid" })
-  } 
-};
+  try {
+    let userId = req.params.userId
+    let email = req.body.email
+    if (req.validToken._id == userId) {
+      let userDetails = await userModel.findOneAndUpdate({ _id: userId }, { email: email }, { new: true })
+      if (userDetails) {
+        res.send({ status: true, msg: userDetails })
+      } else {
+        res.send({ status: false, msg: "Invalid UsedId" })
+      }
+    } else { res.status(404).send({ status: false, msg: 'User not found' }) }
+  }
+  catch (error) { res.status(500).send({ status: false, msg: "Invalid token Id or user Id" }) }
+}
+
 
 module.exports.updateUser = updateUser;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

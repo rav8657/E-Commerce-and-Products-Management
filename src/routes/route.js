@@ -10,10 +10,6 @@ router.get('/test-me', function (req, res) {
 
 
 
-router.post('/createUser', userController.createUser);
-
-router.post('/login', userController.login);
-
 router.get('/users/:userId', appMiddleware.checkAuthentication, userController.users);
 
 router.put('/updateUser/:userId', appMiddleware.checkAuthentication, userController.updateUser);
