@@ -17,8 +17,8 @@ const users = async function (req, res) {
       } else {
         res.status(404).send({ status: false, msg: "Invalid UsedId" })
       }
-    } else { res.status(404).send({ status: false, msg: "Not Authorized" }) }
-    console.log(req.token.userId)
+    } else { res.status(404).send({ status: false, msg: "Resource Not Found" }) }
+    //console.log(req.token.userId)
   }
 
   catch (error) {
