@@ -1,21 +1,21 @@
-#AXIOS Get request
-ABOUT AXIOS- a package that helps us hit any external api and fetch data from that api
+Read the initial pages of the following documentation till the first api i.e. /assets api : https://docs.coincap.io/
+ignore most of the stuff ( it might seem very verbose at this stage) and just try to get a basic idea
+Now create an API key from the section which says “Request API Key- Click here to request your API key”
+the “HEADER” section above it also contains details on how to use this API key
+“set the header field Authorization=Bearer XXXX” :- you have to create a header named “Authorization” and set its value to “Bearer XXXX” where XXXX stands for the API key that you have generated above
+Now the assignment is to create an API that does the following ( one single API and not multiple seperate API’s)
 
-create options object with method and url
+Get the list of all the top 100 cryptocurrency coins in the world using the /assets api ( the first api mentioned in the documentation)
 
-await axios(options)
+Save all the 100 coins in database ( each document to have data of 1 coin)
 
-data will be mostly available in response.data
+The schema should have the following 4 keys: { "symbol" // String and Unqiue "name": // String and Unqiue "marketCapUsd": // String ( not Number) "priceUsd": //String } Notice that changePercent24Hr key is not present in the schema or colletion
+Send back the list of all the coins sorted in order of their growth in last 24hours i.e. sort all the 100 coins based on their changePercent24Hr and send the sorted array in response
 
+The above has to be done in one single API and not multiple seperate API’s. SO go step by step and build features into your API one by one.
 
-Week 6 Day 4-1. What is Axios ?It is a library which is used to make requests to an API, return data from the API, and then do things with that data. It's a package of node js.Package- npm i axiosIt helps us to hit external APIs .Example –  while login to a website or application there is an option to login via google or facebook account, it means google & fb provide an specific API to that application to use into its login page , On clicking on “Continue with google” then google will send the particular user’s details/data to the application then it got accessed.Demo API to fetch all States using Axios.get  (hitting external API)Define a variable named Options . –just a convention         Try {Let options ={        Method : “get”,        Url : “https.www.xyz.com”         };const cowinStates = await axios(options);console.log(“Working fine”);Let  states = cowinStates.data; res.status(200).send({msg : “Succesfully fetched data” , data: states})}Catch(err){res.status(500).send(msg:”Error occured”)}Another example to fetch districts by the states id -  Response in postman –
- like 3
+NOTE: When you hit the api first time, it will create 100 documents corresponding to the 100 coins in your database. Now next time when you hit your API, it will fail as you have made symbol and name unique in your schema. Same coins cant be saved again as will have same symbol and name. SO you could do one of these 3 things to help yourself in the development phase:
 
-[12:53 PM] Joy bhattacharya_R7
-Notes from the sessions till now.
-
-
-
-post request:
-method changed to post
-data field added in options
+delete the data from DB everytime after hitting your API
+Dont maintain “unique:true” in your schema till you are done with your development and add unique:true only towards the completion of your assignment
+for inserting the documents, use findOneAndUpdate with upsert=true..this will create a new document incase there is no entry or will update the old doc with new values when there is an entry already there
