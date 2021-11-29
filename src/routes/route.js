@@ -11,7 +11,7 @@ router.post('/authors',  authorController.createAuthor);
 router.post('/blogs',  blogController.createBlog);
 router.get('/blogs',  blogController.getBlogs);
 router.put('/blogs/:blogId',  blogController.updateBlog);
-router.get('/blogs/:blogId',  blogController.checkdeletestatus);
-router.get('/blogs1',  blogController.deletebyparams);
+router.delete('/blogs/:blogId',  blogController.checkdeletestatus);
+router.delete('/blogs',  blogController.deletebyparams);
 
 module.exports = router;

@@ -80,7 +80,7 @@ const deletebyparams = async function (req, res) {
         let tagname = req.query.tagname
         let subcategory = req.query.subcategory
         let unpublished = req.query.unpublished
-        let deletebydetails = await blogModel.findOneAndUpdate({ _id: authorId, isDeleted: false }, { isDeleted: true })
+        let deletebydetails = await blogModel.findOneAndUpdate({ category:category,authorId:authorId,tags:tagname,subcategory:subcategory,unpublished:unpublished, isDeleted: false }, { isDeleted: true },{new:true})
         if (deletebydetails) {
             res.status(404).send({ msg: "Document is deleted" })
         }
