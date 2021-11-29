@@ -1,13 +1,5 @@
 const mongoose = require('mongoose')
 
-// { fname: { mandatory},
-//  lname: {mandatory},
-//   title: {mandatory,
-//      enum[Mr, Mrs, Miss]},
-//       email: {mandatory, valid email, unique}
-//       , password: {mandatory} }
-
-
 const authorSchema = new mongoose.Schema({
     fname: {
         type: String,
@@ -19,7 +11,7 @@ const authorSchema = new mongoose.Schema({
     },
     title: {
         type: String,
-        enum: [Mr, Mrs, Miss],
+        enum:['Mr', 'Mrs', 'Miss'],
         required: true
     },
     email: {
