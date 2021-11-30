@@ -106,6 +106,9 @@ const checkdeletestatus = async function (req, res) {
 
 //delete by params
 const deletebyparams = async function (req, res) {
+
+
+
   try {
     let updatedfilter = {}
 
@@ -126,20 +129,19 @@ const deletebyparams = async function (req, res) {
       updatedfilter["isPublished"] = req.query.isPublished
     }
     console.log(updatedfilter)
-    let deleteData = await blogModel.updateMany(updatedfilter, {
-      isDeleted: true,
-      deletedAt: new Date(),
-    });
-    console.log(updatedfilter)
-    if (deleteData) {
-      res.status(200).send({ status: true, msg: "Blog has been deleted" });
-    } else {
-      res.status(404).send({ status: false, msg: "No such blog exist" });
-    }
-  } catch (error) {
-    res.status(500).send({ status: false, msg: error });
-  }
+
+let deleteData = await blogModel.findOne(updatedfilter)
+if (!deleteData) {
+  return res.status(404).send({ status: false, msg: "The given data is Invalid" });
 }
+deleteData.isDeleted = true;
+deleteData.save();
+res.status(200).send({ msg: "succesful", data: deleteData });
+}
+catch (err) {
+res.status(500).send({ msg: err });
+}}
+
 
 
 module.exports.createBlog = createBlog;
