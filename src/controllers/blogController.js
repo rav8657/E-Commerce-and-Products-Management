@@ -132,14 +132,14 @@ const deletebyparams = async function (req, res) {
 
 let deleteData = await blogModel.findOne(updatedfilter)
 if (!deleteData) {
-  return res.status(404).send({ status: false, msg: "The given data is Invalid" });
+  return res.status(404).send({ status: false, msg: "Given data is Invalid" });
 }
 deleteData.isDeleted = true;
 deleteData.save();
-res.status(200).send({ msg: "succesful", data: deleteData });
+res.status(200).send({ msg: "Succesful", data: deleteData });
 }
-catch (err) {
-res.status(500).send({ msg: err });
+catch (error) {
+res.status(500).send({ msg: error });
 }}
 
 
