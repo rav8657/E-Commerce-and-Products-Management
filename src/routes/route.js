@@ -5,7 +5,7 @@ const  blogController = require('../controllers/blogController');
 
 
 
-
+//----------------------APIs--------------------------------
 
 router.post('/authors',  authorController.createAuthor);
 router.post('/blogs',  blogController.createBlog);

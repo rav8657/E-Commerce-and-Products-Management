@@ -2,9 +2,10 @@ const blogModel = require('../models/blogModel')
 const authorModel = require('../models/authorModel')
 
 
+//---------------------2nd-CREATE BLOGS--------------------
+
+
 const createBlog = async function (req, res) {
-
-
   try {
     const blog = req.body;
     if (blog.isPublished == true) {
@@ -25,8 +26,15 @@ const createBlog = async function (req, res) {
   }
 }
 
-const getBlogs = async function (req, res) {
 
+
+
+//-----------------------3rd-GET BLOGS LIST-----------------------------------
+
+
+
+
+const getBlogs = async function (req, res) {
 
   try {
     let updatedfilter = {
@@ -60,17 +68,21 @@ const getBlogs = async function (req, res) {
 
 
 
+//-----------------------------4th- UPDATE BLOG-------------------------------------
+
+
+
+
 const updateBlog = async function (req, res) {
   try {
     const blogId = req.params.blogId
-    // const {title, body, tags, category, subcategory, isPublished} = req.Body
     let title = req.body.title
     let body = req.body.body
     let tags = req.body.tags
     let subcategory = req.body.subcategory
-    let isPublished = req.body.isPublished 
+    let isPublished = req.body.isPublished
 
-    const updatedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { title: title, body: body,$push: {tags: tags, subcategory: subcategory}, isPublished: isPublished }, { new: true })
+    const updatedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { title: title, body: body, $push: { tags: tags, subcategory: subcategory }, isPublished: isPublished }, { new: true })
     if (updatedBlog.isPublished == true) {
 
       updatedBlog.publishedAt = new Date()
@@ -85,7 +97,10 @@ const updateBlog = async function (req, res) {
 
 
 
-//delete 
+
+//---------------------------------5th-DELETE BLOG WITH ID----------------------------------------
+
+
 const checkdeletestatus = async function (req, res) {
   try {
     let blogId = req.params.blogId
@@ -104,11 +119,13 @@ const checkdeletestatus = async function (req, res) {
 
 
 
-//delete by params
+
+
+//----------------------------6th-DELETE BLOG WITH QUERY----------------------------------------
+
+
+
 const deletebyparams = async function (req, res) {
-
-
-
   try {
     let updatedfilter = {}
 
@@ -130,17 +147,22 @@ const deletebyparams = async function (req, res) {
     }
     console.log(updatedfilter)
 
-let deleteData = await blogModel.findOne(updatedfilter)
-if (!deleteData) {
-  return res.status(404).send({ status: false, msg: "Given data is Invalid" });
+    let deleteData = await blogModel.findOne(updatedfilter)
+    if (!deleteData) {
+      return res.status(404).send({ status: false, msg: "Given data is Invalid" });
+    }
+    deleteData.isDeleted = true;
+    deleteData.save();
+    res.status(200).send({ msg: "Succesful", data: deleteData });
+  }
+  catch (error) {
+    res.status(500).send({ msg: error });
+  }
 }
-deleteData.isDeleted = true;
-deleteData.save();
-res.status(200).send({ msg: "Succesful", data: deleteData });
-}
-catch (error) {
-res.status(500).send({ msg: error });
-}}
+
+
+
+
 
 
 
