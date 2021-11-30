@@ -19,31 +19,37 @@ const createBlog = async function (req, res) {
       res.status(400).send({ msg: "Invalid Credential" })
     }
 
-
   } catch (err) {
     console.log(err.message);
     res.status(500).send({ msg: "There is some error" })
   }
-
-
-
 }
 
 const getBlogs = async function (req, res) {
 
 
   try {
-    let data = await blogModel.find({ isDeleted: false, isPublished: true });
-    let authorId = req.query.authorId;
-    let category = req.query.category;
-    let tag = req.query.tag;
-    let subcategory = req.query.subcategory;
-    if (data) {
-      let check = await blogModel.find({ $or: [{ authorId: authorId }, { tags: tag }, { category: category }, { subcategory: subcategory }] });
+    let updatedfilter = {
+      isDeleted: false, isPublished: true
+    }
+    if (req.query.authorId) {
+      updatedfilter["authorId"] = req.query.authorId
+    }
+    if (req.query.category) {
+      updatedfilter["category"] = req.query.category
+    }
+    if (req.query.tags) {
+      updatedfilter["tags"] = req.query.tags
+    }
+    if (req.query.subcategory) {
+      updatedfilter["subcategory"] = req.query.subcategory
+    }
+    let check = await blogModel.find(updatedfilter)
+    if (check.length > 0) {
       res.status(200).send({ status: true, data: check })
     }
     else {
-      res.status(200).send({ status: true, data: data })
+      res.status(404).send({ msg: "not find" })
     }
   }
   catch (error) {
@@ -51,22 +57,6 @@ const getBlogs = async function (req, res) {
   }
 }
 
-
-
-//     try {
-//         // let authorId=req.query
-//         let getAllBlogs = await blogModel.find({ isDeleted: false, isPublished: true })
-//         if (getAllBlogs) {
-//             res.status(200).send({ status: true, data: getAllBlogs })
-//         } else {
-//             res.status(400).send({ status: false, msg: "no document found" })
-//         }
-//     }
-//     catch (error) {
-//         console.log(error)
-//         res.status(500).send({ status: false, msg: "server error" })
-//     }
-// }
 
 
 
@@ -79,6 +69,7 @@ const updateBlog = async function (req, res) {
     let tags = req.body.tags
     let subcategory = req.body.subcategory
     let isPublished = req.body.isPublished
+
     const updatedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { title: title, body: body, tags: tags, subcategory: subcategory, isPublished: isPublished }, { new: true })
     res.status(200).send({ status: true, message: 'Blog updated successfully', data: updatedBlog });
   } catch (error) {
@@ -110,44 +101,40 @@ const checkdeletestatus = async function (req, res) {
 
 //delete by params
 const deletebyparams = async function (req, res) {
-
   try {
-    let authorid = req.query.authorid;
-    let tag = req.query.tag;
-    let subcategory = req.query.subcategory;
-    let isPublished = req.query.isPublished;
-    let check = await blogModel.find({ $or: [{ authorId: authorid }, { tags: [tag] }, { subcategory: [subcategory] }, { isPublished: isPublished }] });
-    if (check) {
-      await blogModel.updateMany({ $or: [{ authorId: authorid }, { tags: [tag] }, { subcategory: [subcategory] }, { isPublished: isPublished }] }, { isDeleted: true });
+    let updatedfilter = {}
 
-      res.status(200).send({ status: true, msg: "sucessfully deleted" });
+    console.log(updatedfilter)
+    if (req.query.authorId) {
+      updatedfilter["authorId"] = req.query.authorId
+    }
+    if (req.query.category) {
+      updatedfilter["category"] = req.query.category
+    }
+    if (req.query.tags) {
+      updatedfilter["tags"] = req.query.tags
+    }
+    if (req.query.subcategory) {
+      updatedfilter["subcategory"] = req.query.subcategory
+    }
+    if (req.query.isPublished) {
+      updatedfilter["isPublished"] = req.query.isPublished
+    }
+    console.log(updatedfilter)
+    let deleteData = await blogModel.updateMany(updatedfilter, {
+      isDeleted: true,
+      deletedAt: new Date(),
+    });
+    console.log(updatedfilter)
+    if (deleteData) {
+      res.status(200).send({ status: true, msg: "Blog has been deleted" });
     } else {
-      res.ststus(404).send({ status: false, msg: "No blog found" });
+      res.status(404).send({ status: false, msg: "No such blog exist" });
     }
   } catch (error) {
     res.status(500).send({ status: false, msg: error });
   }
-
-
-
-  // try {
-  //     let category = req.query.category
-  //     let authorId = req.query.authorId
-  //     let tagname = req.query.tagname
-  //     let subcategory = req.query.subcategory
-  //     let unpublished = req.query.unpublished
-  //     let deletebydetails = await blogModel.findOneAndUpdate({ category:category,authorId:authorId,tags:tagname,subcategory:subcategory,unpublished:unpublished, isDeleted: false }, { isDeleted: true },{new:true})
-  //     if (deletebydetails) {
-  //         res.status(404).send({ msg: "Document is deleted" })
-  //     }
-  // }
-  // catch {
-  //     res.status(500).send()
-  // }
 }
-
-
-
 
 
 module.exports.createBlog = createBlog;
