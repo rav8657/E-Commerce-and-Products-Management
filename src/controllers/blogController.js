@@ -6,14 +6,14 @@ const createBlog = async function (req, res) {
 
 
   try {
-    const book = req.body;
-    if (book.isPublished == true) {
-      book["publishedAt"] = new Date()
+    const blog = req.body;
+    if (blog.isPublished == true) {
+      blog["publishedAt"] = new Date()
     }
     const id = req.body.authorId;
     let check = await authorModel.findById(id)
     if (check) {
-      let write = await blogModel.create(book);
+      let write = await blogModel.create(blog);
       res.status(201).send({ msg: "The book is here", write });
     } else {
       res.status(400).send({ msg: "Invalid Credential" })
@@ -71,6 +71,11 @@ const updateBlog = async function (req, res) {
     let isPublished = req.body.isPublished
 
     const updatedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { title: title, body: body, tags: tags, subcategory: subcategory, isPublished: isPublished }, { new: true })
+    if (updatedBlog.isPublished == true) {
+
+      updatedBlog.publishedAt = new Date()
+
+    }
     res.status(200).send({ status: true, message: 'Blog updated successfully', data: updatedBlog });
   } catch (error) {
     console.log(error)
