@@ -7,11 +7,13 @@ const Middleware=require("../middlewares/Authentication")
 
 //----------------------APIs--------------------------------
 
+// AUTHORS ROUTES
+
 router.post('/authors',  authorController.createAuthor);
 router.post('/login',authorController.login)
 
 
-// Blog routes
+// BLOGS ROUTES
 
 router.post('/blogs',Middleware.Auth,  blogController.createBlog);
 router.get('/blogs',Middleware.Auth,  blogController.getBlogs);
