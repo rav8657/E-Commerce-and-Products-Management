@@ -1,3 +1,4 @@
+const mongoose = require("mongoose")
 const blogModel = require('../models/blogModel')
 const authorModel = require('../models/authorModel')
 
@@ -37,6 +38,7 @@ const createBlog = async function (req, res) {
 const getBlogs = async function (req, res) {
 
   try {
+    if (req.user.userId == req.query.authorId) {
     let updatedfilter = {
       isDeleted: false, isPublished: true
     }
@@ -59,6 +61,9 @@ const getBlogs = async function (req, res) {
     else {
       res.status(404).send({ msg: "not find" })
     }
+  } else {
+    res.status(404).send({ err: "Invalid AuthorId " })
+}
   }
   catch (error) {
     res.status(404).send({ msg: "error-response-status" })
@@ -129,7 +134,7 @@ const deletebyparams = async function (req, res) {
   try {
     let updatedfilter = {}
 
-    console.log(updatedfilter)
+    //console.log(updatedfilter)
     if (req.query.authorId) {
       updatedfilter["authorId"] = req.query.authorId
     }
@@ -145,7 +150,7 @@ const deletebyparams = async function (req, res) {
     if (req.query.isPublished) {
       updatedfilter["isPublished"] = req.query.isPublished
     }
-    console.log(updatedfilter)
+    //console.log(updatedfilter)
 
     let deleteData = await blogModel.findOne(updatedfilter)
     if (!deleteData) {
