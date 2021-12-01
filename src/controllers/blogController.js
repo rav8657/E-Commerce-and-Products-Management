@@ -17,17 +17,17 @@ const createBlog = async function (req, res) {
       let check = await authorModel.findById(id)
       if (check) {
         let write = await blogModel.create(blog);
-        res.status(201).send({ msg: "The book is here", write });
+        res.status(201).send({ msg: "The blog is here", write });
       } else {
         res.status(400).send({ msg: "Invalid Credential" })
       }
     }
     else {
-      res.status(404).send({ err: "Invalid AuthorId " })
+      res.status(404).send({ err: "Prohibited authentication" })
     }
 
   } catch (err) {
-    console.log(err.message);
+
     res.status(500).send({ msg: "There is some error" })
   }
 }
@@ -71,7 +71,7 @@ const getBlogs = async function (req, res) {
     }
   }
   catch (error) {
-    res.status(404).send({ msg: "error-response-status" })
+    res.status(500).send({ msg: "error-response-status" })
   }
 }
 
@@ -94,9 +94,10 @@ const updateBlog = async function (req, res) {
 
     const check = await blogModel.findOne({ _id: blogId })
     const authid = check.authorId
-    //console.log(authid)
+   
     if (req.user.userId == authid) {
       const updatedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { title: title, body: body, $push: { tags: tags, subcategory: subcategory }, isPublished: isPublished }, { new: true })
+
       if (updatedBlog.isPublished == true) {
         updatedBlog.publishedAt = new Date()
       }
@@ -105,7 +106,7 @@ const updateBlog = async function (req, res) {
       res.status(404).send({ msg: "invalid blogId" })
     }
   } catch (error) {
-    console.log(error)
+    
     res.status(500).send({ status: false, message: error.message });
   }
 }
@@ -117,21 +118,21 @@ const updateBlog = async function (req, res) {
 
 
 const checkdeletestatus = async function (req, res) {
+
   try {
 
-    //if (req.user.userId == req.params.authorId) {
     let blogId = req.params.blogId
 
     const check = await blogModel.findOne({ _id: blogId })
     const authorid = check.authorId
     if (req.user.userId == authorid) {
-      let deletedblogs = await blogModel.findOneAndUpdate({ _id: blogId, isDeleted: false }, { isDeleted: true, deletedAt :new Date() })
+      let deletedblogs = await blogModel.findOneAndUpdate({ _id: blogId, isDeleted: false }, { isDeleted: true, deletedAt: new Date() })
       if (deletedblogs) {
         res.status(200).send({ msg: "deleted" })
       }
 
       else {
-        res.status(404).send({ msg: "invalid blogId" })
+        res.status(404).send({ msg: "Invalid blogId" })
       }
     }
     else {
