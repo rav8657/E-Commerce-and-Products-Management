@@ -1,4 +1,4 @@
-const {isValid,isValidRequestBody} = require("./collegeController")
+const { isValid, isValidRequestBody } = require("./collegeController")
 const collegeModel = require("../models/collegeModel");
 const internModel = require("../models/internModel");
 
@@ -30,7 +30,7 @@ const createInterns = async function (req, res) {
 
 
     //Extract Params
-    const { name, email, mobile, collegeId, isDeleted } = requestBody;
+    const { name, email, mobile, collegeName, isDeleted } = requestBody;
 
 
     //Validation Starts
@@ -72,9 +72,9 @@ const createInterns = async function (req, res) {
     }
 
 
-    //if (!/^[0-9]\d{9}$/gi.test(mobile)) {
+    if (!/^[0-9]\d{9}$/gi.test(mobile)) {
     //if (!/^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/.test(mobile)) {
-    if (!/^\+(?:[0-9] ?){10,12}[0-9]$/.test(mobile)) {
+    //if (!/^\+(?:[0-9] ?){10,12}[0-9]$/.test(mobile)) {
       res.status(400).send({
         status: false,
         message: `Mobile should be a valid number`
@@ -99,8 +99,8 @@ const createInterns = async function (req, res) {
     }
 
     //-------------------------------------------------------------------------------------------
-    if (!isValid(collegeId)) {
-      res.status(400).send({ status: false, msg: "College ID is required" });   //body
+    if (!isValid(collegeName)) {
+      res.status(400).send({ status: false, msg: "College Name is required" });   //body
       return;
     }
     //----------------------------------------------------------------------------------------------
@@ -109,16 +109,20 @@ const createInterns = async function (req, res) {
 
 
     //Validating College ID
-    const isValidCollegeId = await collegeModel.findOne({ _id: collegeId, isDeleted: false });
+    const isValidCollegeName = await collegeModel.findOne({ name: collegeName, isDeleted: false });
 
-    if (!isValidCollegeId) {
-      res.status(400).send({ status: false, msg: `It is not a valid College ID` });
+    if (!isValidCollegeName) {
+      res.status(400).send({ status: false, msg: `It is not a valid College Name` });
       return;
     }
+    const collegeId = isValidCollegeName._id
 
+    //requestBody['collegeId'] = collegeId
 
-    const newIntern = await internModel.create(requestBody)
-    const updateResponse =await internModel.findOne(newIntern).select({createdAt: 0, updatedAt: 0, __v: 0,_id:0})
+    const updatedBody = { name, email, mobile, collegeId, isDeleted } ;
+
+    const newIntern = await internModel.create(updatedBody)
+    const updateResponse = await internModel.findOne(newIntern).select({ createdAt: 0, updatedAt: 0, __v: 0, _id: 0 })
     res.status(201).send({
       status: true, msg: "New Intern created successfully", data: updateResponse
     });
