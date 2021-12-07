@@ -24,6 +24,11 @@ let validateMobile = function(v) {
 
 
 const internSchema = new mongoose.Schema({
+    isDeleted: {
+        type: Boolean,
+        default: false
+    },
+
     name: {
         type: String,
         required: "name is required",
@@ -51,10 +56,7 @@ const internSchema = new mongoose.Schema({
     collegeId: {
         type: ObjectId,
         ref: 'College'
-    },
-    isDeleted: {
-        type: Boolean,
-        default: false
     }
+   
 }, { timestamps: true })
 module.exports = mongoose.model('intern', internSchema)
