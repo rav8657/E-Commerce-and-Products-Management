@@ -89,7 +89,7 @@ const getCollegeDetails = async function (req, res) {
 
         const name1 = req.query.collegeName
         if (!isValid(name1)) {
-            return res.status(400).send({ status: false, message: 'Please provide valid query-Key' })
+            return res.status(400).send({ status: false, message: 'Please provide valid query-Key or value' })
         }
         else { filterQuery['name'] = name1 }
 

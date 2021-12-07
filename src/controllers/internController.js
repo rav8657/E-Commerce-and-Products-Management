@@ -40,7 +40,7 @@ const createInterns = async function (req, res) {
     }
 
 
-    if (!isValid(email.trim())) {
+    if (!isValid(email)) {
       return res.status(400).send({ status: false, message: "Intern email required" });
     }
 
@@ -67,7 +67,7 @@ const createInterns = async function (req, res) {
     }
 
 
-    if (!isValid(mobile.trim())) {
+    if (!isValid(mobile)) {
       res.status(400).send({ status: false, msg: "Mobile Number is required" });
       return;
     }
