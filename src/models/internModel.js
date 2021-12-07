@@ -16,9 +16,9 @@ let validateEmail = function(email) {
     return re.test(email)
 }
 let validateMobile = function(v) {
-    let re = /^[0-9]\d{9}$/gi;   
-    //let re = /^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/;   
-//let re = /^\+(?:[0-9] ?){10,12}[0-9]$/;
+    //let re = /^[0-9]\d{9}$/gi;   
+    let re = /^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/;   
+//let re = /^(\+\d{1,3}[- ]?)?\d{10}$/;
     return re.test(v);
     }
 
@@ -44,9 +44,9 @@ const internSchema = new mongoose.Schema({
         required : true,
         unique:true,
         validate: [validateMobile, 'Please fill a valid Mobile Number'],
-        match: [ /^[0-9]\d{9}$/gi, 'Please fill a valid Mobile Number']
-        //match: [/^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/, 'please fill a valid Mobile Number']
-        //match: [/^\+(?:[0-9] ?){10,12}[0-9]$/,'please fill a valid Mobile Number']
+        //match: [ /^[0-9]\d{9}$/gi, 'Please fill a valid Mobile Number']
+        match: [/^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/, 'please fill a valid Mobile Number']
+        //match: [/^(\+\d{1,3}[- ]?)?\d{10}$/,'please fill a valid Mobile Number']
     },
     collegeId: {
         type: ObjectId,

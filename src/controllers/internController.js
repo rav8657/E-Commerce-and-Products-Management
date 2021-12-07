@@ -1,7 +1,7 @@
 const { isValid, isValidRequestBody } = require("./collegeController")
 const collegeModel = require("../models/collegeModel");
 const internModel = require("../models/internModel");
-
+//=======================================================================================
 // const isValid = function (value) {
 //   if (typeof value === "undefined" || value === null) return false;
 //   if (typeof value === "string" && value.trim().length === 0) return false;
@@ -13,7 +13,7 @@ const internModel = require("../models/internModel");
 // };
 
 
-//---------------------------------------------------------------------------------------
+//----------------------2-POST APIs----------------------------------------------------------------
 
 
 const createInterns = async function (req, res) {
@@ -38,13 +38,14 @@ const createInterns = async function (req, res) {
       res.status(400).send({ status: false, msg: "Intern name is required" });
       return;
     }
-    if (!isValid(email)) {
-      return res
-        .status(400)
-        .send({ status: false, message: "Intern email required" });
+
+
+    if (!isValid(email.trim())) {
+      return res.status(400).send({ status: false, message: "Intern email required" });
     }
 
-    if (!/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/.test(email)) {
+
+    if (!/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/.test(email.trim())) {
       res
         .status(400)
         .send({
@@ -66,18 +67,17 @@ const createInterns = async function (req, res) {
     }
 
 
-    if (!isValid(mobile)) {
+    if (!isValid(mobile.trim())) {
       res.status(400).send({ status: false, msg: "Mobile Number is required" });
       return;
     }
 
 
-    if (!/^[0-9]\d{9}$/gi.test(mobile)) {
-    //if (!/^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/.test(mobile)) {
-    //if (!/^\+(?:[0-9] ?){10,12}[0-9]$/.test(mobile)) {
+    //if (!/^[0-9]\d{9}$/gi.test(mobile)) {
+    if (!/^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/.test(mobile.trim())) {
+      //if (!/^(\+\d{1,3}[- ]?)?\d{10}$/.test(mobile)) {
       res.status(400).send({
-        status: false,
-        message: `Mobile should be a valid number`
+        status: false, message: `Mobile should be a valid number`
       });
       return;
     }
@@ -103,10 +103,7 @@ const createInterns = async function (req, res) {
       res.status(400).send({ status: false, msg: "College Name is required" });   //body
       return;
     }
-    //----------------------------------------------------------------------------------------------
-
-    //Validation ends
-
+    //---------------Validation ends-------------------------------------------------------------------------------
 
     //Validating College ID
     const isValidCollegeName = await collegeModel.findOne({ name: collegeName, isDeleted: false });
@@ -119,7 +116,7 @@ const createInterns = async function (req, res) {
 
     //requestBody['collegeId'] = collegeId
 
-    const updatedBody = { name, email, mobile, collegeId, isDeleted } ;
+    const updatedBody = { name, email, mobile, collegeId, isDeleted };
 
     const newIntern = await internModel.create(updatedBody)
     const updateResponse = await internModel.findOne(newIntern).select({ createdAt: 0, updatedAt: 0, __v: 0, _id: 0 })
