@@ -24,6 +24,17 @@ const registerCollege = async function (req, res) {
         // Extract body
         const { name, fullName, logoLink, isDeleted } = requestBody
 
+        //==================================================================================
+        
+        //---------We are using the split function to check that the college name is in single word or not----------//
+        const collegeval = name.split(" ");
+        const len = collegeval.length
+        if (len > 1) {
+            return res.status(400).send({ status: false, msg: "Abbreviated college name should be in a single word" });
+        }
+
+        //=================================================================
+
         // valid Body
         if (!isValid(name)) {
             return res.status(400).send({ status: false, message: "Please provide valid name" })
@@ -81,12 +92,7 @@ const getCollegeDetails = async function (req, res) {
             return res.status(400).send({ status: false, msg: "No query param received" });
         }
 
-        // const name1 = req.query.collegeName
-        // if (isValid(name1)) {
-        //     filterQuery['name'] = name1
-        // }
-
-
+  
         const name1 = req.query.collegeName
         if (!isValid(name1)) {
             return res.status(400).send({ status: false, message: 'Please provide valid query-Key or value' })
