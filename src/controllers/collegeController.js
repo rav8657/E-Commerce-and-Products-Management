@@ -27,11 +27,7 @@ const registerCollege = async function (req, res) {
         //==================================================================================
         
         //---------We are using the split function to check that the college name is in single word or not----------//
-        const collegeval = name.split(" ");
-        const len = collegeval.length
-        if (len > 1) {
-            return res.status(400).send({ status: false, msg: "Abbreviated college name should be in a single word" });
-        }
+        
 
         //=================================================================
 
@@ -53,6 +49,11 @@ const registerCollege = async function (req, res) {
             return;
         }
 
+        const collegeval = name.split(" ");
+        const len = collegeval.length 
+        if (len > 1) {
+            return res.status(400).send({ status: false, msg: "Abbreviated college name should be in a single word" });
+        }
         //valid Name
         const isNameAlreadyRegister = await collegeModel.findOne({ name })
         //console.log(isNameAlreadyRegister)
