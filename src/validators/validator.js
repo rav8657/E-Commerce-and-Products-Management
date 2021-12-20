@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-// Validation checking function
+
 
 const isValid = function(value) {
     if (typeof value === 'undefined' || value === null) return false 
@@ -19,7 +19,7 @@ const isValidTitle = function(title) {
 }
 
 const validString = function(value) {
-    if (typeof value === 'string' && value.trim().length === 0) return false //it checks whether the string contain only space or not 
+    if (typeof value === 'string' && value.trim().length === 0) return false 
     return true;
 }
 
@@ -28,15 +28,13 @@ const validAddress = function(address) {
     if (Object.keys(address).length === 0) return false
     return true;
 }
-const validRating = function isInteger(value) {
-    return value % 1 == 0;
-}
+
 module.exports = {
     isValid,
     isValidRequestBody,
     isValidTitle,
     isValidObjectId,
     validString,
-    validAddress,
-    validRating
+    validAddress
+   
 }

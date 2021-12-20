@@ -15,13 +15,12 @@ const createBook = async (req, res) => {
         if (!validator.isValid(title)) {
             return res.status(400).send({ status: false, message: "Title must be present or check its key" })
         };
-        //...........................
+     
         if (typeof (req.body.title) != 'string') {
 
             return res.status(400).send({ status: false, message: "Numbers are not allowed" })
         }
 
-        //..............................
         if (!validator.isValid(excerpt)) {
             return res.status(400).send({ status: false, message: "excerpt must be present, Please provide proper key and value" })
         };
@@ -158,7 +157,6 @@ const updateBook = async function (req, res) {
         if (!validator.isValidRequestBody(requestUpdateBody)) {
             return res.status(400).send({ status: false, message: 'Invalid request parameters. Please provide book details to update.' })
         }
-
 
 
         if (title || excerpt || ISBN || releasedAt) {
