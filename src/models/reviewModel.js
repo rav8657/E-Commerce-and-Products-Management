@@ -10,12 +10,13 @@ const mongoose = require('mongoose');
 
 const reviewSchema = new mongoose.Schema({
 
-    bookId: { type: mongoose.Types.ObjectId, ref: 'Book', required: true },
+    bookId: { type: mongoose.Schema.Types.ObjectId, refs: 'Book', required: true },
 
     reviewedBy: {
         type: String,
         required: true,
-        default: "Guest"
+        default: "Guest",
+        trim:true
     },
     reviewedAt: {
         type: Date,
@@ -23,8 +24,8 @@ const reviewSchema = new mongoose.Schema({
     },
     rating: {
         type: Number,
-        min: 1,
-        max: 5,
+        min:1,
+        max:5,
         required: true
     },
     deletedAt: Date,    //confirm by menter
@@ -32,7 +33,7 @@ const reviewSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    review: String,  //not understand what is optional
+    review: {type:String, trim:true},  //not understand what is optional
 }, { timestamps: true });
 
 module.exports = mongoose.model('Review', reviewSchema)
