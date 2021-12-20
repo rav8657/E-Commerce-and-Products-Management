@@ -28,13 +28,13 @@ const createUser = async function (req, res) {
         const { title, name, phone, email, password, address } = requestBody; 
        
         if (!isValid(title)) {
-            return res.status(400).send({ status: false, message: 'title is required' })
+            return res.status(400).send({ status: false, message: 'title is required or check key and value' })
         }
         if (!isValid(name)) {
-            return res.status(400).send({ status: false, message: 'name is required' })
+            return res.status(400).send({ status: false, message: 'name is required or check key and value' })
         }
         if (!isValid(phone)) {
-            return res.status(400).send({ status: false, message: 'phone is required' })
+            return res.status(400).send({ status: false, message: 'phone is required or check key' })
         }
 
         // if (!/^[0-9]\d{9}$/gi.test(mobile)) {
@@ -123,7 +123,7 @@ const loginUser = async function (req, res) {
         const { email, password } = requestBody;
 
         if (!isValid(email)) {
-            res.status(400).send({ status: false, msg: "enter an email" });
+            res.status(400).send({ status: false, msg: "enter an email or check key name" });
             return;
         }
 
@@ -132,7 +132,7 @@ const loginUser = async function (req, res) {
         }
 
         if (!isValid(password)) {
-            res.status(400).send({ status: false, msg: "enter a password" });
+            res.status(400).send({ status: false, msg: "enter a password or check key name" });
             return;
         }
 

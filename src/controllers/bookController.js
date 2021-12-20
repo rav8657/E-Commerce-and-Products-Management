@@ -60,7 +60,7 @@ const createBook = async (req, res) => {
         }
         if (req.body.userId != req.userId) {
 
-            return res.status(403).send({
+            return res.status(401).send({
                 status: false,
                 message: "Unauthorized access."
             })
@@ -152,7 +152,7 @@ const updateBook = async function (req, res) {
         const { title, excerpt, releasedAt, ISBN } = requestUpdateBody;
 
         if (!validator.isValidObjectId(params)) {
-            return res.status(400).send({ status: false, message: "Invalid bookId." })
+            return res.status(404).send({ status: false, message: "Invalid bookId." })
         }
 
         if (!validator.isValidRequestBody(requestUpdateBody)) {
@@ -176,33 +176,6 @@ const updateBook = async function (req, res) {
             };
         }
 
-
-        //...........................
-        // if (!(title)) {
-
-        //     return res.status(400).send({ status: false, message: 'title is required or check its key & value' })
-
-        // }
-
-        // if (!(excerpt)) {
-
-        //     return res.status(400).send({ status: false, message: 'excerpt is required or check its key & value' })
-
-        // }
-
-        // if (!(ISBN)) {
-
-        //     return res.status(400).send({ status: false, message: 'ISBN is required or check its key & value' })
-
-        // }
-
-        // if (!(releasedAt)) {
-
-        //     return res.status(400).send({ status: false, message: 'releasedAt is required or check its key & value' })
-
-        // }
-        //........................
-
         const searchBook = await bookModel.findById({
             _id: params,
             isDeleted: false
@@ -213,7 +186,7 @@ const updateBook = async function (req, res) {
         //..........................
 
         if (searchBook.userId != req.userId) {
-            return res.status(403).send({
+            return res.status(401).send({
                 status: false,
                 message: "Unauthorized access."
             })
@@ -232,7 +205,7 @@ const updateBook = async function (req, res) {
 
             res.status(200).send({ status: true, message: "Successfully updated book details.", data: changeDetails })
         } else {
-            return res.status(400).send({ status: false, message: "Unable to update details.Book has been already deleted" })
+            return res.status(404).send({ status: false, message: "Unable to update details.Book has been already deleted" })
         }
     } catch (err) {
         return res.status(500).send({ status: false, message: "Something went wrong", Error: err.message })
@@ -242,20 +215,26 @@ const updateBook = async function (req, res) {
 //.................................................................
 const deleteBookByID = async (req, res) => {
     try {
+
         const params = req.params.bookId;
 
         if (!validator.isValidObjectId(params)) {
             return res.status(400).send({ status: false, message: "Inavlid bookId." })
         }
+
         const findBook = await bookModel.findById({ _id: params })
+
         if (!findBook) {
-            return res.status(404).send({ status: false, message: `No book found by ${params}` })
-        } else if (findBook.userId != req.userId) {
-            return res.status(403).send({
-                status: false,
-                message: "Unauthorized access."
-            })
-        } else if (findBook.isDeleted == true) {
+
+            return res.status(404).send({ status: false, message: `No book found ` })
+        
+        } else if 
+        (findBook.userId != req.userId) {
+            return res.status(401).send({status: false,message: "Unauthorized access." })
+
+        } 
+        
+        else if (findBook.isDeleted == true) {
             return res.status(400).send({ status: false, message: `Book has been already deleted.` })
         } else {
             const deleteData = await bookModel.findOneAndUpdate({ _id: { $in: findBook } }, { $set: { isDeleted: true, deletedAt: new Date() } }, { new: true });
@@ -265,6 +244,8 @@ const deleteBookByID = async (req, res) => {
         return res.status(500).send({ status: false, message: "Something went wrong", Error: err.message })
     }
 }
+//.............................
+
 
 
 module.exports = {

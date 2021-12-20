@@ -15,7 +15,7 @@ const authMiddleware =  (req, res, next) => {
 
     }
     if (Date.now() > (decoded.exp) * 1000) {
-      return res.status(404).send({ status: false, message: `Session Expired, Login again` })
+      return res.status(403).send({ status: false, message: `Session Expired, Login again` })
     }
     
     req.userId = decoded.userId;
