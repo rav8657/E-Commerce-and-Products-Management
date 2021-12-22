@@ -23,11 +23,6 @@ const validString = function(value) {
     return true;
 }
 
-const validAddress = function(address) {
-    if (typeof address === 'undefined' || address === null) return false 
-    if (Object.keys(address).length === 0) return false
-    return true;
-}
 
 module.exports = {
     isValid,
@@ -35,6 +30,6 @@ module.exports = {
     isValidTitle,
     isValidObjectId,
     validString,
-    validAddress
+    
    
 }

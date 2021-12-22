@@ -103,6 +103,13 @@ const updateReview = async function (req, res) {
         //     return res.status(400).send({ status: false, message: 'review is required or check its key' })
 
         // }
+        if (!validator.isValidObjectId(bookId)) {
+            return res.status(400).send({ status: false, message: `Invalid bookId.` })
+        }
+
+        if (!validator.isValidObjectId(reviewId)) {
+            return res.status(400).send({ status: false, message: `Invalid review Id.` })
+        }
 
         if (!isValid(req.body.rating)) {
             return res.status(400).send({ status: false, message: ' Please provide rating or check its key & value' })
@@ -142,7 +149,7 @@ if (!(checkingreviewId.bookId.toString() == checkingbookId._id.toString())) {
         let newBook = checkingbookId.toObject()                 //........ mentor----------
 
         if (reviewsData) {
-            newBook['reviewsData'] = reviewsData  //......mentor.........
+            newBook['reviewsData'] = reviewsData  
         }
         res.status(201).send({ status: true, data: newBook })
 
@@ -159,6 +166,15 @@ const deleteReview = async function (req, res) {
     try {
         let bookId = req.params.bookId
         let reviewId = req.params.reviewId
+
+        if (!validator.isValidObjectId(bookId)) {
+            return res.status(400).send({ status: false, message: `Invalid bookId.` })
+        }
+
+        if (!validator.isValidObjectId(reviewId)) {
+            return res.status(400).send({ status: false, message: `Invalid review Id.` })
+        }
+
         let Review = await reviewModel.findOne({ _id: reviewId, isDeleted: false })
         let book = await booksModel.findOne({ _id: bookId, isDeleted: false })
         if (!(Review) || !(book)) {

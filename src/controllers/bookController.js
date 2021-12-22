@@ -91,6 +91,10 @@ const getAllBooks = async (req, res) => {
             subcategory
         } = queryParams
 
+        if (!validator.isValidObjectId(userId)) {
+            return res.status(400).send({ status: false, message: `Invalid userId.` })
+        }
+
         if (userId || category || subcategory) {
             let obj = {};
             if (userId) {
@@ -129,6 +133,11 @@ const getBookDetailsById = async (req, res) => {
         }
 
         const book = await bookModel.findOne({ _id: bookId, isDeleted: false }).select({ ISBN: 0, __v: 0 })
+
+        if (!validator.isValidObjectId(bookId)) {
+            return res.status(400).send({ status: false, message: `Invalid bookId.` })
+        }
+
         if (!book) {
             return res.status(404).send({ status: false, message: 'No book found' })
         }
@@ -160,16 +169,16 @@ const updateBook = async function (req, res) {
 
 
         if (title || excerpt || ISBN || releasedAt) {
-            if (!validator.isValid(title)) {
+            if (!validator.validString(title)) {
                 return res.status(400).send({ status: false, message: "title is required or check its key & value" })
             }
-            if (!validator.isValid(excerpt)) {
+            if (!validator.validString(excerpt)) {
                 return res.status(400).send({ status: false, message: "excerpt is required or check its key & value." })
             };
-            if (!validator.isValid(ISBN)) {
+            if (!validator.validString(ISBN)) {
                 return res.status(400).send({ status: false, message: "ISBN is required or check its key & value" })
             };
-            if (!validator.isValid(releasedAt)) {
+            if (!validator.validString(releasedAt)) {
                 return res.status(400).send({ status: false, message: "releasedAt is required or check its key & value." })
             };
         }
