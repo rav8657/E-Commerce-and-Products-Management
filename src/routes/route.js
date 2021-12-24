@@ -6,8 +6,6 @@ const userController = require('../controllers/userController')
 const MW = require('../middlewares/authMiddleware')
 
 
-//router.post("/aws", userController.aws)
-
 
 // USER Section
 router.post('/register', userController.register)

@@ -37,7 +37,7 @@ const uploadFile = async (file) => {
         })
     })
 }
-///////////////////////////
+//..................................................................
 const register = async function (req, res) {
     try {
         let files = req.files
@@ -145,7 +145,7 @@ const register = async function (req, res) {
     }
 }
 
-///////////////////////////////////////////////////////////////////////////////
+//..................................................................
 const login = async (req, res) => {
 
 
@@ -264,8 +264,6 @@ const updateUserProfile = async  (req, res) => {
             return res.status(400).send({ status: false, message: `${userIdFromToken} Unauthorized access! Owner info doesn't match ` })
         }
 
-
-
         const findUser = await UserModel.findOne({ _id: userId })
         if (!findUser) {
             return res.status(400).send({
@@ -278,8 +276,6 @@ const updateUserProfile = async  (req, res) => {
             return
         }
 
-
-
         // Extract params
         let { fname, lname, email, phone, password, address, profileImage } = requestBody;
 
@@ -290,7 +286,6 @@ const updateUserProfile = async  (req, res) => {
             if (!validator.isValid(fname)) {
                 return res.status(400).send({ status: false, message: "Invalid request parameter, please provide fname" })
             }
-
         }
 
         if (!validator.validString(lname)) {
@@ -301,10 +296,7 @@ const updateUserProfile = async  (req, res) => {
             if (!validator.isValid(lname)) {
                 return res.status(400).send({ status: false, message: "Invalid request parameter, please provide lname" })
             }
-
-
         }
-
 
         if (!validator.validString(email)) {
             return res.status(400).send({ status: false, message: 'email Required' })
@@ -324,9 +316,7 @@ const updateUserProfile = async  (req, res) => {
             if (isEmailAlredyPresent) {
                 return res.status(400).send({ status: false, message: `Email Already Present` });
             }
-
         }
-
 
         if (!validator.validString(phone)) {
             return res.status(400).send({ status: false, message: 'phone Required' })
@@ -366,11 +356,6 @@ const updateUserProfile = async  (req, res) => {
 
         }
 
-
-
-
-
-        //!----------
       
         if (address) {
             let x = JSON.stringify(address)
@@ -485,96 +470,3 @@ module.exports = {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-        // //......................
-        // //email = email.trim()
-        // if (!/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/.test(email)) {
-        //     return res.status(400).send({ status: false, message: `Email should be a valid email address` });
-        // }
-
-        // let isEmailAlredyPresent = await UserModel.findOne({ email: email })
-        // if (isEmailAlredyPresent) {
-        //     return res.status(400).send({ status: false, message: `Email Already Present` });
-        // }
-
-        // //..............
-        // if (!(password.length >= 8 && password.length <= 15)) {
-        //     return res.status(400).send({ status: false, message: "Password should be Valid min 8 and max 15 " })
-        // }
-
-
-        // //..........
-        // if (!/^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/.test(phone)) {
-        //     return res.status(400).send({ status: false, message: `Mobile should be a valid number` });
-        // }
-        // let isPhoneAlredyPresent = await UserModel.findOne({ phone: phone })
-        // if (isPhoneAlredyPresent) {
-        //     return res.status(400).send({ status: false, message: `Phone Number Already Present` });
-        // }
-
-
-
-        //..............
-        // if (!validator.validString(fname)) {
-        //     return res.status(400).send({ status: false, message: "Please provide first name or first name field" });
-        // }
-        // if (!validator.validString(lname)) {
-        //     return res.status(400).send({ status: false, message: "Please provide last name or last name field" });
-        // }
-        // if (!validator.validString(profileImage)) {
-        //     return res.status(400).send({ status: false, message: "Please provide profileimage or profileimage field" });
-        // }
-        // if (!validator.validString(phone)) {
-        //     return res.status(400).send({ status: false, message: "Please provide phone number or phone field" });
-        // }
-        // if (!validator.validString(phone)) {
-        //     return res.status(400).send({ status: false, message: 'Please provide a valid phone number.' })
-        // }
-        // if (!validator.validString(email)) {
-        //     return res.status(400).send({ status: false, message: "Please provide Email id or email field" });;
-        // }
-        // if (!validator.validString(email)) {
-        //     return res.status(404).send({ status: false, message: "Please provide a valid Email Id" });
-        // }
-        // if (!validator.validString(addressbody)) {
-        //     return res.status(400).send({ status: false, message: "Please provide address or address field" });
-        // }
-        // if (!validator.validString(addressbody.shipping)) {
-        //     return res.status(400).send({ status: false, message: "Please provide shipping or shipping field" });
-        // }
-        // if (!validator.validString(addressbody.shipping.street)) {
-        //     return res.status(400).send({ status: false, message: "Please provide shipping street or shipping street field" });
-        // }
-        // if (!validator.validString(addressbody.shipping.city)) {
-        //     return res.status(400).send({ status: false, message: "Please provide shipping city or shipping city field" });
-        // }
-        // if (!validator.validString(addressbody.shipping.pincode)) {
-        //     return res.status(400).send({ status: false, message: "Please provide shipping pincode or shipping pincode field" });
-        // }
-        // if (!validator.validString(password)) {
-        //     return res.status(400).send({ status: false, message: "Please provide password or password field" });;
-        // }
-        // let size = Object.keys(password).length
-        // if (size <= 8 && size > 15) {
-        //     return res.status(400).send({ status: false, message: "Please provide password with minimum 8 and maximum 15 characters" });;
-        // }
-        // const duplicateemail = await UserModel.find({ email: email });
-        // const emailFound = duplicateemail.length;
-        // if (emailFound != 0) {
-        //     return res.status(400).send({ status: false, message: "This user email is already exists with another user" });
-        // }
-        // const duplicatephonenumber = await UserModel.findOne({ phone: phone })
-        // if (duplicatephonenumber) {
-        //     return res.status(400).send({ status: false, message: "This phone number already exists with another user" });
-        // }
