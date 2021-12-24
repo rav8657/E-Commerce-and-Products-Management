@@ -1,27 +1,20 @@
 const express = require('express')
 const router = express.Router()
 
-
 const userController = require('../controllers/userController')
-const bookController = require('../controllers/bookController')
-const reviewController = require('../controllers/reviewController')
-const mw = require('../middlewares/authMiddleware')
 
-// User routes
-router.post('/register', userController.createUser);
-router.post('/login', userController.loginUser);
+const MW = require('../middlewares/authMiddleware')
 
 
-// Book routes
-router.post('/books', mw.authMiddleware, bookController.createBook)
-router.get('/books', mw.authMiddleware, bookController.getAllBooks)
-router.get('/books/:bookId', mw.authMiddleware, bookController.getBookDetailsById)
-router.put('/books/:bookId', mw.authMiddleware, bookController.updateBook)
-router.delete('/books/:bookId', mw.authMiddleware, bookController.deleteBookByID)
+//router.post("/aws", userController.aws)
 
-// Review routes
-router.post('/books/:bookId/review', reviewController.addReview)
-router.put('/books/:bookId/review/:reviewId', reviewController.updateReview)
-router.delete('/books/:bookId/review/:reviewId', reviewController.deleteReview)
+
+// USER Section
+router.post('/register', userController.register)
+router.post('/login', userController.login)
+router.get('/user/:userId/profile',MW.userAuth, userController.getUserProfile)
+router.put('/user/:userId/profile',MW.userAuth, userController.updateUserProfile)
+
+
 
 module.exports = router;
