@@ -79,9 +79,15 @@ const createProduct = async (req, res) => {
         }
         
     
+        // if (installments) {
+        //     if (!(!isNaN(Number(installments)))) {
+        //         return res.status(400).send({ status: false, message: `Installments must be a valid number` })
+        //     }
+        // }
+
         if (installments) {
-            if (!(!isNaN(Number(installments)))) {
-                return res.status(400).send({ status: false, message: `Installments must be a valid number` })
+            if (!validator.validInstallment(installments)) {
+                return res.status(400).send({ status: false, message: "installments can't be a decimal number & must be greater than equalto zero " }) 
             }
         }
 
@@ -310,7 +316,6 @@ const updateProduct = async function (req, res) {
         }
        
 
-
         if (validator.isValid(isFreeShipping)) {
 
             if (!((isFreeShipping === "true") || (isFreeShipping === "false"))) {
@@ -337,6 +342,7 @@ const updateProduct = async function (req, res) {
         }
 
         if (availableSizes) {
+            
             let sizesArray = availableSizes.split(",").map(x => x.trim())
 
             for (let i = 0; i < sizesArray.length; i++) {
@@ -344,21 +350,19 @@ const updateProduct = async function (req, res) {
                     return res.status(400).send({ status: false, message: `availableSizes should be among ${["S", "XS", "M", "X", "L", "XXL", "XL"].join(', ')}` })
                 }
             }
-            if (!updatedProductDetails.hasOwnProperty(updatedProductDetails, '$addToSet'))
-                updatedProductDetails['$addToSet'] = {}
-            updatedProductDetails['$addToSet']['availableSizes'] = { $each: sizesArray }
+            if (!updatedProductDetails.hasOwnProperty(updatedProductDetails, '$set'))
+                updatedProductDetails['$set'] = {}
+            updatedProductDetails['$set']['availableSizes'] = sizesArray//{ $set: sizesArray }
         }
 
-        if (validator.isValid(installments)) {
-
-            if (!(!isNaN(Number(installments)))) {
-                return res.status(400).send({ status: false, message: `installments should be a valid number` })
-            }
-
-            if (!updatedProductDetails.hasOwnProperty('installments'))
-                updatedProductDetails['installments'] = installments
+ 
+        if (installments) {
+            if (!validator.validInstallment(installments)) {
+                return res.status(400).send({ status: false, message: "installments can't be a decimal number & must be greater than equalto zero " }) 
+             }
+              if (!updatedProductDetails.hasOwnProperty('installments'))
+            updatedProductDetails['installments'] = installments
         }
-
         const updatedProduct = await productModel.findOneAndUpdate({ _id: productId }, updatedProductDetails, { new: true })
 
         return res.status(200).send({ status: true, message: 'Successfully updated product details.', data: updatedProduct });
