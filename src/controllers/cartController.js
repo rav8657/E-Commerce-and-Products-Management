@@ -103,6 +103,7 @@ const updateCart = async (req, res) => {
     try {
         let userId = req.params.userId;
         let requestBody = req.body;
+
         if (!validator.isValidObjectId(userId)) {
             return res.status(400).send({ status: false, message: "Invalid userId in body" });
         }
@@ -121,7 +122,7 @@ const updateCart = async (req, res) => {
             return res.status(400).send({ status: false, message: "Invalid request parameters. Please provide cart details." });
         }
 
-        //*....cart
+        //*....cartId
 
         if (!validator.isValidObjectId(cartId)) {
             return res.status(400).send({ status: false, message: "Invalid cartId in body" });
@@ -132,7 +133,7 @@ const updateCart = async (req, res) => {
             return res.status(400).send({ status: false, message: "cartId does not exits" });
         }
 
-        //*....product
+        //*....productId
 
         if (!validator.isValidObjectId(productId)) {
             return res.status(400).send({ status: false, message: "Invalid productId in body" });
@@ -144,7 +145,7 @@ const updateCart = async (req, res) => {
             return res.status(400).send({ status: false, message: "productId does not exits" });
         }
 
-        //!.......find if products exits in cart
+        //TODO.......find if products exits in cart
 
         let isProductinCart = await cartModel.findOne({ items: { $elemMatch: { productId: productId } } });
 
@@ -152,7 +153,7 @@ const updateCart = async (req, res) => {
             return res.status(400).send({ status: false, message: `This ${productId} product does not exits in the cart` });
         }
 
-        //TODO...... removeProduct validation
+        //*...... removeProduct validation
 
         if (!!isNaN(Number(removeProduct))) {
             return res.status(400).send({ status: false, message: `removeProduct should be a valid number either 0 or 1` });
@@ -163,8 +164,6 @@ const updateCart = async (req, res) => {
             });
         }
         let findQuantity = cart.items.find((x) => x.productId.toString() === productId);
-
-        //? console.log(findQuantity)
 
         if (removeProduct === 0) {
             let totalAmount = cart.totalPrice - product.price * findQuantity.quantity; // substract the amount of product*quantity
@@ -210,44 +209,27 @@ const getCart = async (req, res) => {
         const userId = req.params.userId;
 
         if (!validator.isValidObjectId(userId)) {
-            return res
-                .status(400)
-                .send({ status: false, message: "Invalid userId in params." });
+            return res.status(400).send({ status: false, message: "Invalid userId in params." });
         }
         const findUser = await userModel.findById({ _id: userId });
         if (!findUser) {
-            return res.status(400).send({
-                status: false,
-                message: `User doesn't exists by ${userId} `,
-            });
+            return res.status(400).send({ status: false,message: `User doesn't exists by ${userId} `});
         }
-        const findCart = await cartModel
-            .findOne({ userId: userId })
-            .populate("items.productId", {
+        const findCart = await cartModel.findOne({ userId: userId }).populate("items.productId", {
                 _id: 1,
                 title: 1,
                 price: 1,
                 productImage: 1,
                 availableSizes: 1,
-            })
-            .select({ _id: 0, createdAt: 0, updatedAt: 0, __v: 0 });
+            }).select({ _id: 0, createdAt: 0, updatedAt: 0, __v: 0 });
+
         if (!findCart) {
-            return res.status(400).send({
-                status: false,
-                message: `Cart doesn't exists by ${userId} `,
-            });
+            return res.status(400).send({status: false,message: `Cart doesn't exists by ${userId} ` });
         }
 
-        return res.status(200).send({
-            status: true,
-            message: "Successfully fetched cart.",
-            data: findCart,
-        });
+        return res.status(200).send({ status: true,message: "Successfully fetched cart.",data: findCart });
     } catch (err) {
-        return res.status(500).send({
-            status: false,
-            message: "Error is : " + err,
-        });
+        return res.status(500).send({ status: false, message: "Error is : " + err});
     }
 };
 
@@ -257,47 +239,28 @@ const deleteCart = async (req, res) => {
     try {
         const userId = req.params.userId;
         if (!validator.isValidObjectId(userId)) {
-            return res
-                .status(400)
-                .send({ status: false, message: "Invalid userId in params." });
+            return res.status(400).send({ status: false, message: "Invalid userId in params." });
         }
         const findUser = await userModel.findById({ _id: userId });
         if (!findUser) {
-            return res.status(400).send({
-                status: false,
-                message: `User doesn't exists by ${userId} `,
-            });
+            return res.status(400).send({ status: false, message: `User doesn't exists by ${userId} ` });
         }
         const findCart = await cartModel.findOne({ userId: userId });
         if (!findCart) {
-            return res.status(400).send({
-                status: false,
-                message: `Cart doesn't exists by ${userId} `,
-            });
+            return res.status(400).send({ status: false, message: `Cart doesn't exists by ${userId} ` });
         }
-        const deleteCart = await cartModel
-            .findOneAndUpdate(
-                { userId: userId },
-                {
-                    $set: {
-                        items: [],
-                        totalPrice: 0,
-                        totalItems: 0,
-                    },
+        const deleteCart = await cartModel.findOneAndUpdate({ userId: userId },
+            {
+                $set: {
+                    items: [],
+                    totalPrice: 0,
+                    totalItems: 0,
                 },
-                { new: true }
-            )
-            .select({ items: 1, totalPrice: 1, totalItems: 1, _id: 0 });
-        return res.status(204).send({
-            status: true,
-            message: "Cart deleted successfully",
-            data: deleteCart,
-        });
+            }, { new: true }).select({ items: 1, totalPrice: 1, totalItems: 1, _id: 0 });
+
+        return res.status(204).send({ status: true, message: "Cart deleted successfully", data: deleteCart });
     } catch (err) {
-        return res.status(500).send({
-            status: false,
-            message: "Error is : " + err,
-        });
+        return res.status(500).send({ status: false, message: "Error is : " + err });
     }
 };
 
