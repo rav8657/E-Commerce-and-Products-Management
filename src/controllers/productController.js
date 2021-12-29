@@ -4,7 +4,7 @@ const validator = require('../validators/validator')
 const currencySymbol = require("currency-symbol-map")
 
 
-//....................AWS PART..........................................................
+//....................AWS PART....................................
 
 aws.config.update({
     accessKeyId: "AKIAY3L35MCRRMC6253G",
@@ -77,17 +77,10 @@ const createProduct = async (req, res) => {
         if (!(currencyId == "INR")) {
             return res.status(400).send({ status: false, message: 'currencyId should be INR' })
         }
-        
-    
-        // if (installments) {
-        //     if (!(!isNaN(Number(installments)))) {
-        //         return res.status(400).send({ status: false, message: `Installments must be a valid number` })
-        //     }
-        // }
 
         if (installments) {
             if (!validator.validInstallment(installments)) {
-                return res.status(400).send({ status: false, message: "installments can't be a decimal number & must be greater than equalto zero " }) 
+                return res.status(400).send({ status: false, message: "installments can't be a decimal number & must be greater than equalto zero " })
             }
         }
 
@@ -177,7 +170,7 @@ const getAllProducts = async function (req, res) {
                 if (!Object.prototype.hasOwnProperty.call(filterQuery, 'price'))
                     filterQuery['price'] = {}
                 filterQuery['price']['$gte'] = Number(priceGreaterThan)
-            
+
             }
 
             if (validator.isValid(priceLessThan)) {
@@ -191,7 +184,7 @@ const getAllProducts = async function (req, res) {
                 if (!Object.prototype.hasOwnProperty.call(filterQuery, 'price'))
                     filterQuery['price'] = {}
                 filterQuery['price']['$lte'] = Number(priceLessThan)
-           
+
             }
 
             if (validator.isValid(priceSort)) {
@@ -264,7 +257,7 @@ const updateProduct = async function (req, res) {
         }
 
         if (!(validator.isValidRequestBody(requestBody) || req.files)) {
-            return res.status(400).send({ status: false, message: 'No paramateres passed. product unmodified', data: product })
+            return res.status(400).send({ status: false, message: 'No paramateres passed. product unmodified' })
         }
 
         // Extract params
@@ -311,10 +304,10 @@ const updateProduct = async function (req, res) {
             }
 
             if (!updatedProductDetails.hasOwnProperty('currencyId'))
-            updatedProductDetails['currencyId'] = currencyId;
-        
+                updatedProductDetails['currencyId'] = currencyId;
+
         }
-       
+
 
         if (validator.isValid(isFreeShipping)) {
 
@@ -342,7 +335,7 @@ const updateProduct = async function (req, res) {
         }
 
         if (availableSizes) {
-            
+
             let sizesArray = availableSizes.split(",").map(x => x.trim())
 
             for (let i = 0; i < sizesArray.length; i++) {
@@ -355,19 +348,19 @@ const updateProduct = async function (req, res) {
             updatedProductDetails['$set']['availableSizes'] = sizesArray//{ $set: sizesArray }
         }
 
- 
+
         if (installments) {
             if (!validator.validInstallment(installments)) {
-                return res.status(400).send({ status: false, message: "installments can't be a decimal number & must be greater than equalto zero " }) 
-             }
-              if (!updatedProductDetails.hasOwnProperty('installments'))
-            updatedProductDetails['installments'] = installments
+                return res.status(400).send({ status: false, message: "installments can't be a decimal number & must be greater than equalto zero " })
+            }
+            if (!updatedProductDetails.hasOwnProperty('installments'))
+                updatedProductDetails['installments'] = installments
         }
         const updatedProduct = await productModel.findOneAndUpdate({ _id: productId }, updatedProductDetails, { new: true })
 
         return res.status(200).send({ status: true, message: 'Successfully updated product details.', data: updatedProduct });
     } catch (err) {
-       
+
         return res.status(500).send({
             status: false,
             message: "Error is : " + err
@@ -407,4 +400,6 @@ module.exports = {
     updateProduct,
     deleteProduct
 }
+
+
 

@@ -1,7 +1,5 @@
 const mongoose = require('mongoose')
 
-//const ObjectId = mongoose.Types.ObjectId
-
 const isValid = function (value) {
     if (typeof value === 'undefined' || value === null) return false
     if (typeof value === 'string' && value.trim().length === 0) return false
@@ -25,8 +23,14 @@ const validInstallment = function isInteger(value) {
     if(value < 0) return false
      if(value % 1 == 0 ) return true
 }
+const validQuantity = function isInteger(value) {
+    if(value < 1) return false
+     if(value % 1 == 0 ) return true
+}
 
-
+const isValidStatus = function(status) {
+    return ['pending', 'completed', 'cancelled'].indexOf(status) !== -1
+}
 
 
 module.exports = {
@@ -34,6 +38,8 @@ module.exports = {
     isValidRequestBody,
     isValidObjectId,
     validString,
-    validInstallment
+    validInstallment,
+    validQuantity,
+    isValidStatus
 
 }

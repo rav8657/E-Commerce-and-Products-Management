@@ -214,8 +214,8 @@ const login = async (req, res) => {
 
         const token = jwt.sign({
             userId: user._id,
-            iat: Math.floor(Date.now() / 1000),//time of issuing the token.
-            exp: Math.floor(Date.now() / 1000) + 60 * 30 //3600 * 24 * 7 setting token expiry time limit.
+            iat: Math.floor(Date.now() / 1000),   //time of issuing the token.
+            exp: Math.floor(Date.now() / 1000) + 3600 * 24 * 7 //+ 60 * 30 setting token expiry time limit.
         }, 'Hercules')
 
 
