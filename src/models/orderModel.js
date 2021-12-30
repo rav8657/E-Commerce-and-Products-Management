@@ -16,7 +16,7 @@ const orderSchema = new mongoose.Schema({
 
     totalQuantity: { type: Number, required: true },
 
-    cancellable: { type: Boolean, required: true },
+    cancellable: { type: Boolean, default:true },
 
     status: { type: String, default: 'pending', enum: ['pending', 'completed', 'cancelled'] },
 

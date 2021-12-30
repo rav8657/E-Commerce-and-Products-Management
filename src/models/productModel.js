@@ -35,7 +35,7 @@ const productSchema = new mongoose.Schema({
         productImage: {
             type: String, 
             required: true
-        },  // s3 link
+        }, 
 
         style: {type: String},
 
@@ -48,7 +48,7 @@ const productSchema = new mongoose.Schema({
 
         installments: {type: Number},
 
-        deletedAt: {type: Date, default:null},
+        deletedAt: {type: Date, default: null },
 
         isDeleted: {type: Boolean, default: false}
 
