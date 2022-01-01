@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt')
 const saltRounds = 10;
 const jwt = require('jsonwebtoken')
 
-//*....................AWS S3 PART.............................
+//!....................AWS S3 PART.............................
 
 aws.config.update({
     accessKeyId: "AKIAY3L35MCRRMC6253G",// id
@@ -33,7 +33,7 @@ const uploadFile = async (file) => {
         });
     });
 };
-//..................................................................
+//!..................................................................
 //creating user by validating every details.
 
 const register = async function (req, res) {
@@ -72,7 +72,7 @@ const register = async function (req, res) {
         if (isEmailAlredyPresent) {
             return res.status(400).send({ status: false, message: `Email Already Present` });
         }
-        phone = phone.trim()
+        //phone = phone.trim()
         if (!validator.isValid(phone)) {
             return res.status(400).send({ status: false, message: "Invalid request parameter, please provide Phone" });
         }

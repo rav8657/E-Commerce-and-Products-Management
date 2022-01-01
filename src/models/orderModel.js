@@ -3,10 +3,10 @@ const ObjectId = mongoose.Schema.Types.ObjectId
 
 const orderSchema = new mongoose.Schema({
 
-    userId: { type: ObjectId, required: true, ref: 'User' },
+    userId: { type: ObjectId, required: true, ref: 'User_Project5' },
 
     items: [{
-        productId: { type: ObjectId, required: true, ref: 'Product' },
+        productId: { type: ObjectId, required: true, ref: 'Product_Project5' },
         quantity: { type: Number, required: true, min: 1 }
     }],
 
@@ -26,4 +26,4 @@ const orderSchema = new mongoose.Schema({
 
 }, { timestamps: true })
 
-module.exports = mongoose.model('Order', orderSchema)
+module.exports = mongoose.model('Order_Project5', orderSchema)

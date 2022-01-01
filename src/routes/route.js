@@ -25,15 +25,15 @@ router.delete('/products/:productId', productController.deleteProduct)
 
 
 //*...... CART SECTION APIs
-router.post('/users/:userId/cart', cartController.cartCreation)
-router.put('/users/:userId/cart', cartController.updateCart)
-router.get('/users/:userId/cart', cartController.getCart)
-router.delete('/users/:userId/cart', cartController.deleteCart)
+router.post('/users/:userId/cart', MW.userAuth, cartController.cartCreation)
+router.put('/users/:userId/cart', MW.userAuth, cartController.updateCart)
+router.get('/users/:userId/cart', MW.userAuth, cartController.getCart)
+router.delete('/users/:userId/cart', MW.userAuth, cartController.deleteCart)
 
 
 //*...... ORDER SECTION APIs
-router.post('/users/:userId/orders', orderController.orderCreation)
-router.put('/users/:userId/orders', orderController.updateOrder)
+router.post('/users/:userId/orders', MW.userAuth, orderController.orderCreation)
+router.put('/users/:userId/orders', MW.userAuth, orderController.updateOrder)
 
 
 module.exports = router;

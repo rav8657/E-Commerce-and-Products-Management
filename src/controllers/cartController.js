@@ -159,7 +159,7 @@ const updateCart = async function (req, res) {
         let findQuantity = findCart.items.find(x => x.productId.toString() === productId)
 
         if (removeProduct === 0) {
-            let totalAmount = findCart.totalPrice - (product.price * findQuantity.quantity) // substract the amount of product*quantity
+            let totalAmount = findCart.totalPrice - (findProduct.price * findQuantity.quantity) // substract the amount of product*quantity
 
             await cartModel.findOneAndUpdate({ _id: cartId }, { $pull: { items: { productId: productId } } }, { new: true })
 
@@ -170,8 +170,8 @@ const updateCart = async function (req, res) {
         }
 
         // decrement quantity
-        let totalAmount = cart.totalPrice - product.price
-        let itemsArr = cart.items
+        let totalAmount = findCart.totalPrice - findProduct.price
+        let itemsArr = findCart.items
 
         for (i in itemsArr) {
             if (itemsArr[i].productId.toString() == productId) {
@@ -192,10 +192,7 @@ const updateCart = async function (req, res) {
         return res.status(200).send({ status: true, message: `${productId} quantity is been reduced By 1`, data: data })
 
     } catch (err) {
-        return res.status(500).send({
-            status: false,
-            message: "Error is : " + err
-        })
+        return res.status(500).send({status: false, message: "Error is : " + err })
     }
 }
 
