@@ -7,6 +7,7 @@ const cartCreation = async function (req, res) {
     try {
         const userId = req.params.userId
         const requestBody = req.body;
+        
         const { quantity, productId } = requestBody
         let userIdFromToken = req.userId;
 

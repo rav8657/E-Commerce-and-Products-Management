@@ -9,8 +9,8 @@ const jwt = require('jsonwebtoken')
 
 aws.config.update({
     accessKeyId: "AKIAY3L35MCRRMC6253G",// id
-    secretAccessKey: "88NOFLHQrap/1G2LqUy9YkFbFRe/GNERsCyKvTZA",// your secret password
-    region: "ap-south-1",// Mumbai region
+    secretAccessKey: "88NOFLHQrap/1G2LqUy9YkFbFRe/GNERsCyKvTZA", // your secret password
+    region: "ap-south-1", // Mumbai region
 })
 
 const uploadFile = async (file) => {
@@ -24,7 +24,7 @@ const uploadFile = async (file) => {
             Key: "Hercules/User/" + new Date() + file.originalname,
             Body: file.buffer,
         }
-// Callback - function provided as the second parameter ( most oftenly)
+
         s3.upload(uploadParams, function (err, data) {
             if (err) {
                 return reject({ "error": err });
@@ -245,7 +245,7 @@ const getUserProfile = async (req, res) => {
 
     try {
         const userId = req.params.userId
-        const userIdFromToken = req.userId
+        //const userIdFromToken = req.userId
 
         //validation starts
 
@@ -261,12 +261,12 @@ const getUserProfile = async (req, res) => {
             })
         }
         //Checking the authorization of the user -> Whether user's Id matches with the book creater's Id or not.
-        if (userIdFromToken != findUserProfile._id) {
-            return res.status(403).send({
-                status: false,
-                message: "Unauthorized access."
-            })
-        }
+        // if (userIdFromToken != findUserProfile._id) {
+        //     return res.status(403).send({
+        //         status: false,
+        //         message: "Unauthorized access."
+        //     })
+        // }
 
         return res.status(200).send({ status: true, message: "Profile found successfully.", data: findUserProfile })
     } catch (err) {

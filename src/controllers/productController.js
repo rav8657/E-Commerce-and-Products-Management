@@ -14,7 +14,7 @@ aws.config.update({
 
 const uploadFile = async (file) => {
     return new Promise(function (resolve, reject) {
-// Create S3 service object
+        // Create S3 service object
         const s3 = new aws.S3({ apiVersion: "2006-03-01" })
 
         const uploadParams = {
@@ -23,7 +23,7 @@ const uploadFile = async (file) => {
             Key: "Hercules/Product/" + new Date() + file.originalname,
             Body: file.buffer,
         }
-// Callback - function provided as the second parameter ( most oftenly)
+        // Callback - function provided as the second parameter ( most oftenly)
         s3.upload(uploadParams, function (err, data) {
             if (err) {
                 return reject({ "error": err })
@@ -32,7 +32,7 @@ const uploadFile = async (file) => {
         })
     })
 }
-//..................................................................
+//!..................................................................
 
 //creating product by validating all details.
 const createProduct = async (req, res) => {
@@ -126,9 +126,9 @@ const createProduct = async (req, res) => {
 
             for (let i = 0; i < array.length; i++) {
                 if (!(["S", "XS", "M", "X", "L", "XXL", "XL"].includes(array[i]))) {
-                    return res.status(400).send({ status: false, message: `Available Sizes must be among ${["S", "XS", "M", "X", "L", "XXL", "XL"].join(', ')}` })
+                    return res.status(400).send({ status: false, message: "AvailableSizes should be among ['S','XS','M','X','L','XXL','XL']" })
                 }
-            }
+            } 
 
             //using array.isArray function to check the value is array or not.
             if (Array.isArray(array)) {
@@ -149,6 +149,7 @@ const createProduct = async (req, res) => {
 //Get all products.
 const getAllProducts = async (req, res) => {
     try {
+
         const filterQuery = { isDeleted: false } //complete object details.
         const queryParams = req.query;
 
@@ -177,7 +178,8 @@ const getAllProducts = async (req, res) => {
                 if (priceGreaterThan <= 0) {
                     return res.status(400).send({ status: false, message: `priceGreaterThan should be a valid number` })
                 }
-                if (!Object.prototype.hasOwnProperty.call(filterQuery, 'price'))
+        if (!Object.prototype.hasOwnProperty.call(filterQuery, 'price'))
+                //if (!Object.hasOwnProperty(filterQuery, 'price'))
                     filterQuery['price'] = {}
                 filterQuery['price']['$gte'] = Number(priceGreaterThan)
 
@@ -192,7 +194,8 @@ const getAllProducts = async (req, res) => {
                 if (priceLessThan <= 0) {
                     return res.status(400).send({ status: false, message: `priceLessThan should be a valid number` })
                 }
-                if (!Object.prototype.hasOwnProperty.call(filterQuery, 'price'))
+        if (!Object.prototype.hasOwnProperty.call(filterQuery, 'price'))
+                //if (!Object.hasOwnProperty(filterQuery, 'price'))
                     filterQuery['price'] = {}
                 filterQuery['price']['$lte'] = Number(priceLessThan)
 
@@ -206,9 +209,9 @@ const getAllProducts = async (req, res) => {
                 }
 
                 const products = await productModel.find(filterQuery).sort({ price: priceSort })
-
+//console.log(products)
                 if (Array.isArray(products) && products.length === 0) {
-                    return res.status(404).send({ statuproductss: false, message: 'No Product found' })
+                    return res.status(404).send({ productStatus: false, message: 'No Product found' })
                 }
 
                 return res.status(200).send({ status: true, message: 'Product list', data: products })
@@ -219,7 +222,7 @@ const getAllProducts = async (req, res) => {
 
         //verifying is it an array and having some data in that array.
         if (Array.isArray(products) && products.length === 0) {
-            return res.status(404).send({ statuproductss: false, message: 'No Product found' })
+            return res.status(404).send({ productStatus: false, message: 'No Product found' })
         }
 
         return res.status(200).send({ status: true, message: 'Product list', data: products })
@@ -357,7 +360,7 @@ const updateProduct = async function (req, res) {
 
             for (let i = 0; i < sizesArray.length; i++) {
                 if (!(["S", "XS", "M", "X", "L", "XXL", "XL"].includes(sizesArray[i]))) {
-                    return res.status(400).send({ status: false, message: `availableSizes should be among ${["S", "XS", "M", "X", "L", "XXL", "XL"].join(', ')}` })
+                    return res.status(400).send({ status: false, message: "AvailableSizes should be among ['S','XS','M','X','L','XXL','XL']" })
                 }
             }
             if (!updatedProductDetails.hasOwnProperty(updatedProductDetails, '$set'))
@@ -378,10 +381,7 @@ const updateProduct = async function (req, res) {
         return res.status(200).send({ status: true, message: 'Successfully updated product details.', data: updatedProduct });
     } catch (err) {
 
-        return res.status(500).send({
-            status: false,
-            message: "Error is : " + err
-        })
+        return res.status(500).send({ status: false, message: "Error is : " + err })
     }
 }
 
