@@ -1,4 +1,4 @@
-const validator = require("../validators/validator");
+const validator = require('../utils/validator')
 const productModel = require('../models/productModel')
 const userModel = require('../models/userModel')
 const cartModel = require('../models/cartModel')
@@ -7,7 +7,6 @@ const cartCreation = async function (req, res) {
     try {
         const userId = req.params.userId
         const requestBody = req.body;
-        
         const { quantity, productId } = requestBody
         let userIdFromToken = req.userId;
 
@@ -33,10 +32,9 @@ const cartCreation = async function (req, res) {
             return res.status(400).send({ status: false, message: `User doesn't exist by ${userId}` })
         }
 
-        //*Authentication & authorization
+        //Authentication & authorization
         if (findUser._id.toString() != userIdFromToken) {
-            res.status(401).send({ status: false, message: `Unauthorized access! User's info doesn't match` });
-            return
+            return res.status(401).send({ status: false, message: `Unauthorized access! User's info doesn't match` });
         }
 
         const findProduct = await productModel.findOne({ _id: productId, isDeleted: false })
@@ -93,7 +91,6 @@ const cartCreation = async function (req, res) {
     }
 }
 
-//!.....................................................................
 //update cart.
 const updateCart = async function (req, res) {
     try {
@@ -113,8 +110,7 @@ const updateCart = async function (req, res) {
 
         //Authentication & authorization
         if (findUser._id.toString() != userIdFromToken) {
-            res.status(401).send({ status: false, message: `Unauthorized access! User's info doesn't match` });
-            return
+            return res.status(401).send({ status: false, message: `Unauthorized access! User's info doesn't match` });
         }
 
         //Extract body
@@ -157,7 +153,7 @@ const updateCart = async function (req, res) {
             return res.status(400).send({ status: false, message: 'removeProduct should be 0 (product is to be removed) or 1(quantity has to be decremented by 1) ' })
         }
 
-        let findQuantity = findCart.items.find(x => x.productId.toString() === productId)
+        let findQuantity = findCart.items.find(x => x.productId.toString() === productId) //returns object
 
         if (removeProduct === 0) {
             let totalAmount = findCart.totalPrice - (findProduct.price * findQuantity.quantity) // substract the amount of product*quantity
@@ -180,9 +176,10 @@ const updateCart = async function (req, res) {
 
                 if (itemsArr[i].quantity < 1) {
                     await cartModel.findOneAndUpdate({ _id: cartId }, { $pull: { items: { productId: productId } } }, { new: true })
-                    let quantity = cart.totalItems - 1
+                    let quantity = findCart.totalItems - 1
 
-                    let data = await cartModel.findOneAndUpdate({ _id: cartId }, { $set: { totalPrice: totalAmount, totalItems: quantity } }, { new: true }) //update the cart with total items and totalprice
+                    let data = await cartModel.findOneAndUpdate({ _id: cartId }, { $set: { totalPrice: totalAmount, totalItems: quantity } },
+                        { new: true }) //update the cart with total items and totalprice
 
                     return res.status(200).send({ status: true, message: `No such quantity/product exist in cart`, data: data })
                 }
@@ -193,11 +190,10 @@ const updateCart = async function (req, res) {
         return res.status(200).send({ status: true, message: `${productId} quantity is been reduced By 1`, data: data })
 
     } catch (err) {
-        return res.status(500).send({status: false, message: "Error is : " + err })
+        return res.status(500).send({ status: false, message: "Error is : " + err })
     }
 }
 
-//!.......................................................
 //fetching cart details.
 const getCart = async function (req, res) {
     try {
@@ -211,15 +207,14 @@ const getCart = async function (req, res) {
         //validation ends
 
         const findUser = await userModel.findById({ _id: userId })
-
         if (!findUser) {
             return res.status(400).send({ status: false, message: `User doesn't exists by ${userId} ` })
         }
 
         //Authentication & authorization
         if (findUser._id.toString() != userIdFromToken) {
-            res.status(401).send({ status: false, message: `Unauthorized access! User's info doesn't match` });
-            return
+            return res.status(401).send({ status: false, message: `Unauthorized access! User's info doesn't match` });
+
         }
 
         const findCart = await cartModel.findOne({ userId: userId })
@@ -235,9 +230,7 @@ const getCart = async function (req, res) {
     }
 }
 
-//!..............................................................................
-
-//deleting cart- changing its items,price & totalItems to 0.
+//deleting cart- changing its items,price & totlItems to 0.
 const deleteCart = async function (req, res) {
     try {
         const userId = req.params.userId;
@@ -252,10 +245,10 @@ const deleteCart = async function (req, res) {
             return res.status(400).send({ status: false, message: `User doesn't exists by ${userId} ` })
         }
 
-        //*Authentication & authorization
+        //Authentication & authorization
         if (findUser._id.toString() != userIdFromToken) {
-            res.status(401).send({ status: false, message: `Unauthorized access! User's info doesn't match` });
-            return
+            return res.status(401).send({ status: false, message: `Unauthorized access! User's info doesn't match` });
+
         }
 
         //finding cart
@@ -263,7 +256,6 @@ const deleteCart = async function (req, res) {
         if (!findCart) {
             return res.status(400).send({ status: false, message: `Cart doesn't exists by ${userId} ` })
         }
-
         //Basically not deleting the cart, just changing their value to 0.
         const deleteCart = await cartModel.findOneAndUpdate({ userId: userId }, {
             $set: {
@@ -271,8 +263,8 @@ const deleteCart = async function (req, res) {
                 totalPrice: 0,
                 totalItems: 0
             }
-        }, { new: true })
-        return res.status(204).send({ status: true, message: "Cart deleted successfully", data: deleteCart })
+        })
+        return res.status(204).send({ status: true, message: "Cart deleted successfully" })
 
     } catch (err) {
         return res.status(500).send({ status: false, message: "Error is : " + err })
