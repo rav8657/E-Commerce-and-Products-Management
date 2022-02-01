@@ -13,10 +13,6 @@ const isValidRequestBody = function(requestBody) {
     return Object.keys(requestBody).length > 0; // it checks, is there any key is available or not in request body
 };
 
-const isValidTitle = function(title) {
-    return ['Mr', 'Mrs', 'Miss'].indexOf(title) !== -1
-}
-
 //only check empty string value.
 const validString = function(value) {
         if (typeof value === 'string' && value.trim().length === 0) return false //it checks whether the string contain only space or not 
@@ -29,13 +25,13 @@ const validInstallment = function isInteger(value) {
     if (value % 1 == 0) return true;
 }
 
-const validatingInvalidObjectId = function(objectId) {
-    if (objectId.length == 24) return true //verifying the length of objectId -> it must be of 24 hex characters.
-    return false
-}
+// const validatingInvalidObjectId = function(objectId) {
+//     if (objectId.length == 24) return true //verifying the length of objectId -> it must be of 24 hex characters.
+//     return false
+// }
 
 
-//for product
+//for cart
 const validQuantity = function isInteger(value) {
     if (value < 1) return false
     if (isNaN(Number(value))) return false
@@ -50,11 +46,10 @@ const isValidStatus = function(status) {
 module.exports = {
     isValid,
     isValidRequestBody,
-    isValidTitle,
     isValidObjectId,
     validString,
     validInstallment,
-    validatingInvalidObjectId,
+    //validatingInvalidObjectId,
     validQuantity,
     isValidStatus
 }

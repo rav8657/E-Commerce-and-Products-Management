@@ -135,6 +135,7 @@ const productCreation = async function(req, res) {
         return res.status(500).send({status: false, message: "Error is : " + err})}
 }
 
+//!.............................................................................
 //fetch all products.
 const getAllProducts = async function(req, res) {
     try {
@@ -216,6 +217,7 @@ const getAllProducts = async function(req, res) {
     }
 }
 
+//!..............................................................................
 //fetch products by Id.
 const getProductsById = async function(req, res) {
     try {
@@ -238,6 +240,7 @@ const getProductsById = async function(req, res) {
         return res.status(500).send({status: false, message: "Error is : " + err})}
 }
 
+//!.................................................................................
 //Update product details.
 const updateProduct = async function(req, res) {
     try {
@@ -367,6 +370,7 @@ const updateProduct = async function(req, res) {
         return res.status(500).send({status: false, message: "Error is : " + err})}
 }
 
+//!..............................................................................
 //deleting product by the seller side.
 const deleteProduct = async function(req, res) {
     try {

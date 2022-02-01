@@ -137,6 +137,8 @@ const userCreation = async(req, res) => {
         return res.status(500).send({status: false, message: "Error is : " + err })}
 }
 
+//!....................................................................................
+
 //user login by validating the email and password.
 const userLogin = async function(req, res) {
     try {
@@ -184,6 +186,7 @@ const userLogin = async function(req, res) {
     }
 }
 
+//!..................................................................................
 //fetching user's profile by Id.
 const getProfile = async(req, res) => {
     try {
